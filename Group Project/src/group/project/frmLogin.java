@@ -57,7 +57,7 @@ public class frmLogin extends Application {
                 System.out.println("Login Successful");
                 window.close();
             } else
-                AlertBox.display("Alert", "Wrong info entered!");
+                AlertBox.display("Login Failed", "Wrong username and/or password!", 250, 100);
         });
         GridPane.setConstraints(btnLogin, 1, 2);
 
