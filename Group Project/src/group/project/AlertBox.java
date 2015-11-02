@@ -8,7 +8,6 @@ import javafx.geometry.*;
 
 public class AlertBox {
 
-    // Do not need to instantiate an object of this class to use static method
     public static void display(String title, String message){
         // Create a new window
         Stage window = new Stage();
