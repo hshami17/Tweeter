@@ -8,7 +8,7 @@ import javafx.geometry.*;
 
 public class AlertBox {
 
-    public static void display(String title, String message){
+    public static void display(String title, String message, int width, int length){
         // Create a new window
         Stage window = new Stage();
 
@@ -27,7 +27,7 @@ public class AlertBox {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(label, close);
-        Scene scene = new Scene(layout, 200, 100);
+        Scene scene = new Scene(layout, width, length);
 
         window.setScene(scene);
         // Wait to return to parent window until window is closed
