@@ -8,6 +8,13 @@ import javafx.geometry.*;
 
 public class AlertBox {
 
+    /**
+     * Display an alert box
+     * @param title The title of the alert window
+     * @param message The message in the alert window
+     * @param width Width of the alert window
+     * @param length Height of the alert window
+     */
     public static void display(String title, String message, int width, int length){
         // Create a new window
         Stage window = new Stage();
@@ -19,14 +26,17 @@ public class AlertBox {
         window.setResizable(false);
 
         // Create a new label and button
-        Label label = new Label(message);
-        Button close = new Button("Close");
+        Label lblMessage = new Label(message);
+        lblMessage.setWrapText(true);
+        Button btnClose = new Button("Close");
         // Have close button close the window when clicked
-        close.setOnAction(event -> window.close());
+        btnClose.setOnAction(event -> window.close());
+        btnClose.defaultButtonProperty().bind(btnClose.focusedProperty());
+
         // Create new layout and center layout, add controls to layout
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(label, close);
+        layout.getChildren().addAll(lblMessage, btnClose);
         Scene scene = new Scene(layout, width, length);
 
         window.setScene(scene);
