@@ -1,13 +1,12 @@
-package group.project;
-
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +26,7 @@ public class frmLogin extends Application {
         frmLogin.setTitle("Tweeter Login");
         frmLogin.setResizable(false);
 
-        //GridPane with 10px padding around edge
+        // GridPane with 10px padding around edge
         GridPane grid = new GridPane();
         //grid.setGridLinesVisible(true);
         // Insets - constrains use (top, right, bottom, left)
@@ -36,36 +35,39 @@ public class frmLogin extends Application {
         grid.setVgap(8);
         grid.setHgap(10);
 
-        Label lblTitle = new Label("Tweeter Login");
-        lblTitle.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        lblTitle.setPadding(new Insets(0, 0, 10, 40));
+        // Create and set title label
+        Label lblTitle = new Label("Tweeter");
+        lblTitle.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 28));
+        lblTitle.setTextFill(Color.web("#4396CC"));
+        lblTitle.setPadding(new Insets(0, 0, 10, 55));
         GridPane.setConstraints(lblTitle, 0, 0);
         GridPane.setHalignment(lblTitle, HPos.CENTER);
         GridPane.setColumnSpan(lblTitle, 3);
 
-        //Name Label - constrains use (child, column, row)
+        // Name Label - constrains use (child, column, row)
         Label lblUserName = new Label("Username:");
+        lblUserName.setFont(Font.font("Helvetica", 14));
         GridPane.setConstraints(lblUserName, 0, 1);
 
-        //Name Input
+        // Name text field
         txtUserName = new TextField();
-        // Set grayed out text
-        txtUserName.setPromptText("username");
+        txtUserName.setFont(Font.font("Helvetica", 18));
         GridPane.setConstraints(txtUserName, 1, 1);
         GridPane.setColumnSpan(txtUserName, 2);
 
-        //Password Label
+        // Password Label
         Label lblPassword = new Label("Password:");
+        lblPassword.setFont(Font.font("Helvetica", 14));
         GridPane.setConstraints(lblPassword, 0, 2);
 
-        //Password Input
+        // Password text field
         txtPassword = new PasswordField();
-        txtPassword.setPromptText("password");
+        txtPassword.setFont(Font.font("Helvetica", 18));
         GridPane.setConstraints(txtPassword, 1, 2);
         GridPane.setColumnSpan(txtPassword, 2);
 
         // Make login button and handle text validation when pressed
-        Button btnLogin = new Button("Log In");
+        Button btnLogin = new Button("Log in");
         btnLogin.setOnAction(event -> {
             try {
                 if (validateUserInfo()) {
@@ -73,26 +75,48 @@ public class frmLogin extends Application {
                     frmLogin.close();
                 } else
                     AlertBox.display("Login Failed", "Wrong username and/or password!", 250, 100);
-            }
-            catch (FileNotFoundException ex){
+            } catch (FileNotFoundException ex) {
                 System.err.println("User info file not found.");
             }
         });
         btnLogin.defaultButtonProperty().bind(btnLogin.focusedProperty());
+        btnLogin.setFont(Font.font("Helvetica", 14));
         GridPane.setConstraints(btnLogin, 1, 3);
 
         // Make register button open new window to create account when pressed
-        Button btnRegister = new Button("Register");
-        btnRegister.setOnAction(event -> {
+        Button btnSignUp = new Button("Sign up");
+        btnSignUp.setOnAction(event -> {
             frmRegister.display();
         });
-        btnRegister.defaultButtonProperty().bind(btnRegister.focusedProperty());
-        GridPane.setConstraints(btnRegister, 2, 3);
+        btnSignUp.defaultButtonProperty().bind(btnSignUp.focusedProperty());
+        btnSignUp.setFont(Font.font("Helvetica", 14));
+        GridPane.setConstraints(btnSignUp, 2, 3);
+
+        // Add Tweeter icon to the form
+        Image image = new Image("fat-twitter.png");
+        ImageView icnTweeter = new ImageView();
+        icnTweeter.setImage(image);
+        icnTweeter.setFitWidth(80);
+        icnTweeter.setPreserveRatio(true);
+        icnTweeter.setSmooth(true);
+        icnTweeter.setCache(true);
+        icnTweeter.setTranslateY(-30);
+        icnTweeter.setTranslateX(-5);
+        GridPane.setConstraints(icnTweeter, 0, 0);
+        GridPane.setRowSpan(icnTweeter, 2);
+
+        // Set control re-alignments to make display cleaner
+        lblUserName.setTranslateY(-5);
+        lblPassword.setTranslateY(-5);
+        txtUserName.setTranslateY(-5);
+        txtPassword.setTranslateY(-5);
+        btnLogin.setTranslateY(-2);
+        btnSignUp.setTranslateY(-2);
 
         //Add everything to grid
-        grid.getChildren().addAll(lblTitle, lblUserName, txtUserName, lblPassword, txtPassword, btnLogin, btnRegister);
+        grid.getChildren().addAll(icnTweeter, lblTitle, lblUserName, txtUserName, lblPassword, txtPassword, btnLogin, btnSignUp);
 
-        Scene scene = new Scene(grid, 280, 180);
+        Scene scene = new Scene(grid, 280, 185);
         frmLogin.setScene(scene);
         frmLogin.show();
     }
@@ -100,7 +124,6 @@ public class frmLogin extends Application {
     /**
      * Validate the username and password input by searching to check
      * if the user exists as a registered user.
-     * @author Hasan Shami
      * @return True or false if the user information was found
      * @throws FileNotFoundException
      */

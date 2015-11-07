@@ -1,5 +1,3 @@
-package group.project;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.*;
@@ -59,8 +57,8 @@ public class frmRegister {
         GridPane.setConstraints(txtPassword, 1, 2);
 
         // Create register button and have it validate inputs when pressed
-        Button btnRegister = new Button("Register");
-        btnRegister.setOnAction(event -> {
+        Button btnSignUp = new Button("Sign up");
+        btnSignUp.setOnAction(event -> {
             try {
                 if (txtUsername.getText().trim().isEmpty() ||
                         txtPassword.getText().trim().isEmpty()) {
@@ -71,8 +69,8 @@ public class frmRegister {
                     FileWriter fileWriter = new FileWriter("UserInfo.txt", true);
                     BufferedWriter out = new BufferedWriter(fileWriter);
                     out.newLine();
-                    out.write(txtUsername.getText().trim().toString() + " " +
-                            txtPassword.getText().trim().toString());
+                    out.write(txtUsername.getText().trim() + " " +
+                            txtPassword.getText().trim());
                     out.close();
                     window.close();
                 } else
@@ -82,11 +80,12 @@ public class frmRegister {
                 ex.printStackTrace();
             }
         });
-        btnRegister.defaultButtonProperty().bind(btnRegister.focusedProperty());
-        GridPane.setConstraints(btnRegister, 1, 3);
+        btnSignUp.defaultButtonProperty().bind(btnSignUp.focusedProperty());
+        btnSignUp.setFont(Font.font("Helvetica", 14));
+        GridPane.setConstraints(btnSignUp, 1, 3);
 
         // Add controls to layout and setup the window scene
-        grid.getChildren().addAll(lblTitle, lblUsername, lblPassword, txtUsername, txtPassword, btnRegister);
+        grid.getChildren().addAll(lblTitle, lblUsername, lblPassword, txtUsername, txtPassword, btnSignUp);
         Scene scene = new Scene(grid, 300, 155);
         window.setScene(scene);
         window.showAndWait();
