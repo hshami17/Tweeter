@@ -1,4 +1,6 @@
-hshami toilet
-lpayne apple
-aodell chair
-bwilson shoe
+hshami Male 20 I love soccer
+aodell Female 21 I love downtown FXBG
+bwilson Female 20 I love running
+lpayne Male 21 I love Jazz
+
+sshami Male 25 I love peac on my face

@@ -1,0 +1,11 @@
+hshami 0 Public I love Tweeter!
+
+hshami 1 Public Hey I am posting shit
+
+hshami 2 Private But this shit is private
+
+hshami 3 Public This is a public post SAHN
+
+hshami 4 Private This is private
+
+sshami 5 Public Hey Tweeter
