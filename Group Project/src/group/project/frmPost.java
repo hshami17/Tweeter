@@ -67,34 +67,35 @@ public class frmPost {
         // Create a new post button to post the content and add to repo
         Button btnPost = new Button("Post");
         btnPost.setOnAction(event -> {
-            try {
-                if (txtPost.getText().trim().isEmpty()) {
-                    AlertBox.display("Invalid", "Please enter content for your post", 250, 100);
-                }
-                else {
-                    // Store new post info into variables
-                    String username = Profile.username;
-                    String ID = PostRepository.currentID.toString();
-                    boolean isPublic = rbPublic.isSelected();
-                    String isPublicStr = "Public";
-                    if (!rbPublic.isSelected()) {
-                        isPublicStr = "Private";
-                    }
-                    String content = txtPost.getText();
-                    // Create a new post authored by current user
-                    Profile.newPost(content, isPublic);
-                    // Save post to text file
-                    FileWriter file = new FileWriter("Post.txt", true);
-                    BufferedWriter out = new BufferedWriter(file);
-                    out.write("\n" + username + " " + ID + " " + isPublicStr + " " +
-                            "0" + " " + "false" + " " + content + "\n");
-                    out.close();
-                    frmHomePage.getAllPublicPosts();
-                    window.close();
-                }
+            if (txtPost.getText().trim().isEmpty()) {
+                AlertBox.display("Invalid", "Please enter content for your post", 250, 100);
             }
-            catch (IOException ex){
-                ex.printStackTrace();
+            else {
+                // Store new post info into variables
+                String username = Profile.username;
+                // Put new post into the next ID
+                PostRepository.currentID++;
+                String ID = PostRepository.currentID.toString();
+                boolean isPublic = rbPublic.isSelected();
+                String isPublicStr = "Public";
+                if (!rbPublic.isSelected()) {
+                    isPublicStr = "Private";
+                }
+                String content = txtPost.getText();
+                // Create a new post authored by current user
+                Profile.newPost(content, isPublic);
+                PostRepository.saveAllPosts();
+                /**
+                 // Save post to text file
+                 FileWriter file = new FileWriter("Post.txt", true);
+                 BufferedWriter out = new BufferedWriter(file);
+                 out.write("\n" + username + " " + ID + " " + isPublicStr + " " +
+                 "0" +  " " + content + "\n");
+                 out.close();
+                 */
+
+                frmHomePage.getAllPublicPosts();
+                window.close();
             }
         });
         btnPost.defaultButtonProperty().bind(btnPost.focusedProperty());

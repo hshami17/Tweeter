@@ -1,39 +1,34 @@
-hshami 0 Public 0 false I love Tweeter!
+hshami 0 Public 6                   I love Tweeter!
 
-hshami 1 Public 0 false Hey I am posting shit
+hshami 2 Private 0                   But this shit is private
 
-hshami 2 Private 0 false But this shit is private
+hshami 3 Public 1                   This is a public post SAHN
 
-hshami 3 Public 0 false This is a public post SAHN
+hshami 4 Private 0                   This is private
 
-hshami 4 Private 0 false This is private
+sshami 5 Public 1                   Hey Tweeter
 
-sshami 5 Public 0 false Hey Tweeter
+sshami 6 Public 0                   Man why is Tweeter so damn awesome??
 
-sshami 6 Public 0 false Man why is Tweeter so damn awesome??
+sshami 7 Private 0                   Hello my followers!
 
-sshami 7 Private 0 false Hello my followers!
+jpinkman 8 Public 0                   Yeah Mr. White! Yeah Science!
 
-jpinkman 8 Public 0 false Yeah Mr. White! Yeah Science!
+hshami 9 Public 0                   Hello World!
 
-hshami 9 Public 0 false Hello World!
+hshami 10 Public 1                   This is a post test to see how this post would look if it went to exceed or maybe meet the 140 character limit because I have alot of stuff.
 
-hshami 10 Public 0 false This is a post test to see how this post would look if it went to exceed or maybe meet the 140 character limit because I have alot of stuff.
+hshami 11 Public 1                   Posting more stuff up in here!!
 
-hshami 11 Public 0 false Posting more stuff up in here!!
+heisenberg 12 Public 3                   Say my name...
 
-heisenberg 12 Public 0 false Say my name...
+hshami 14 Public 9                   I love to Twit!
 
-hshami 13 Public 0 false This is a new post
+hshami 15 Public 5                   Hey Tweeter!!
 
-hshami 14 Public 0 false I love to Twit!
+gfring 16 Public 11                   Welcome to Los Pollos, where something delicious is always cooking.
 
-hshami 15 Public 0 false Hey Tweeter!!
+jpinkman 17 Public 10                   Yooo bitch, hit me up..
 
-gfring 16 Public 0 false Welcome to Los Pollos, where something delicious is always cooking.
-
-jpinkman 17 Public 0 false Yooo bitch, hit me up..
-
-hshami 18 Public 0 false Hey, Does this shit work on NetBeans?
-
+hshami 18 Public 10    Woah Jesse Pinkman uses Tweeter?? Sweet!
 

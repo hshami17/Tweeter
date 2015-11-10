@@ -1,7 +1,9 @@
 package group.project;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,13 +25,12 @@ public class PostRepository {
                 else
                     isPublic = false;
                 Integer likeCount = new Integer(file.next());
-                boolean isArchived;
-                if (file.next().equals("false"))
-                    isArchived = false;
-                else
-                    isArchived = true;
                 String message = file.nextLine();
-                add(new Post(Msg_ID, author, message, isPublic, likeCount, isArchived));
+                add(new Post(Msg_ID, author, message, isPublic, likeCount));
+                if (!file.hasNext()) {
+                    Integer ID = new Integer(Msg_ID);
+                    currentID = ID;
+                }
             }
         }
         catch (IOException ex){
@@ -39,7 +40,6 @@ public class PostRepository {
 
     public static void add(Post newPost){
         postRepo.add(newPost);
-        currentID++;
     }
 
     public static void deletePost(Post removePost){
@@ -54,6 +54,19 @@ public class PostRepository {
             }
         }
         return -1;
+    }
+
+    public static void saveAllPosts(){
+        try {
+            PrintWriter out = new PrintWriter(new FileWriter("Post.txt"));
+            for (int i=0; i<postRepo.size(); i++){
+                out.println(postRepo.get(i).toString() + "\n");
+            }
+            out.close();
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
     public static Post getPost(int ID){

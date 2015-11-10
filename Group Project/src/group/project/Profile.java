@@ -9,14 +9,13 @@ public class Profile {
     public static void newPost(String content, boolean isPublic){
         // Add new user post to post repository
         PostRepository.add(new Post(PostRepository.currentID.toString(),
-                username, content, isPublic, 0, false));
+                username, content, isPublic, 0));
         // Add post to current users repository
-        addPost(PostRepository.currentID.toString(), username, content, isPublic, 0, false);
+        addPost(PostRepository.currentID.toString(), username, content, isPublic, 0);
     }
 
-    private static void addPost(String ID, String username, String content,
-                                boolean isPublic, int likeCount, boolean isArchived){
+    private static void addPost(String ID, String username, String content, boolean isPublic, int likeCount){
         userPosts.add(new Post(PostRepository.currentID.toString(),
-                username, content, isPublic, likeCount, isArchived));
+                username, content, isPublic, likeCount));
     }
 }

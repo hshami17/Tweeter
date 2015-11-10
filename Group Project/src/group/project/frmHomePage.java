@@ -54,6 +54,28 @@ public class frmHomePage {
         txtUserInfo.setPrefSize(100, 200);
         txtUserInfo.setFont(Font.font("Helvetica", 15));
 
+        // Create edit profile button and open edit window when clicked
+        Button btnEditProfile = new Button("Edit Profile");
+        btnEditProfile.setFont(Font.font("Helvetica", 14));
+        btnEditProfile.setTranslateX(7);
+
+        // Create a tagged post button and open users tagged posts
+        Button btnTaggedPosts = new Button("Tagged Posts");
+        btnTaggedPosts.setFont(Font.font("Helvetica", 14));
+        btnTaggedPosts.setTranslateX(7);
+
+        // Create search by # button to search all posts for # phrases
+        Button btnSearchByHashtag = new Button("Search by #");
+        btnSearchByHashtag.setFont(Font.font("Helvetica", 14));
+        btnSearchByHashtag.setTranslateX(7);
+        btnSearchByHashtag.setTranslateY(30);
+
+        // Create a buddy list button to open a window containing your followers and following
+        Button btnBuddyList = new Button("Buddy List");
+        btnBuddyList.setFont(Font.font("Helvetica", 14));
+        btnBuddyList.setTranslateX(7);
+        btnBuddyList.setTranslateY(30);
+
         // Get the logged in user's account info to display
        // Text username = new Text("@" + UserRepository.getUser(Profile.username).getUsername());
        // username.setFont(Font.font("Helvetica", 15));
@@ -126,7 +148,7 @@ public class frmHomePage {
         topPane.setAlignment(Pos.TOP_RIGHT);
 
         // Add user info to the left pane
-        leftPane.getChildren().addAll(txtUserInfo);
+        leftPane.getChildren().addAll(txtUserInfo, btnEditProfile, btnTaggedPosts, btnSearchByHashtag, btnBuddyList);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         // Set the left and top pane
@@ -167,7 +189,8 @@ public class frmHomePage {
                 btnLike.defaultButtonProperty().bind(btnLike.focusedProperty());
                 btnLike.setOnAction(event -> {
                     addPost.setLikeCount(addPost.getLikeCount() + 1);
-                    System.out.println("Likes for this post are now: " + addPost.getLikeCount());
+                    PostRepository.saveAllPosts();
+                    getAllPublicPosts();
                 });
 
                 centerPane.getChildren().addAll(txtAuthor, txtPost, btnLike);
@@ -177,6 +200,7 @@ public class frmHomePage {
                     Button btnDelete = new Button("Delete");
                     btnDelete.setOnAction(event -> {
                         PostRepository.deletePost(addPost);
+                        PostRepository.saveAllPosts();
                         getAllPublicPosts();
                     });
                     btnDelete.setFont(Font.font("Helvetica", 15));
@@ -184,6 +208,7 @@ public class frmHomePage {
                     btnDelete.setTranslateY(-15);
                     centerPane.getChildren().add(btnDelete);
                 }
+                // Show follow button if not authors post
                 else{
                     Button btnFollow = new Button("Follow");
                     btnFollow.setFont(Font.font("Helvetica", 15));
@@ -196,8 +221,14 @@ public class frmHomePage {
                     centerPane.getChildren().add(btnFollow);
                 }
 
+                // Show likes for a post
+                Text txtLikes = new Text(addPost.getLikeCount().toString() + " " + "likes");
+                txtLikes.setFont(Font.font("Helvetica", 14));
+                txtLikes.setTranslateY(-7);
+                centerPane.getChildren().add(txtLikes);
+
                 // Create line to divide posts
-                Line divider = new Line(0, 100, 450, 100);
+                Line divider = new Line(0, 100, 440, 100);
                 divider.setTranslateY(-10);
                 divider.setStroke(Color.LIGHTGRAY);
                 centerPane.getChildren().add(divider);

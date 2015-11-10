@@ -6,15 +6,13 @@ public class Post {
     private String message;
     private boolean isPublic;
     private int likeCount;
-    private boolean archived;
 
     Post(String Msg_ID, String author, String message,
-         boolean isPublic, int likeCount, boolean archived){
+         boolean isPublic, int likeCount){
         this.Msg_ID = Msg_ID;
         this.author = author;
         this.message = message;
         this.isPublic = isPublic;
-        this.archived = archived;
         this.likeCount = likeCount;
     }
 
@@ -54,15 +52,17 @@ public class Post {
         this.likeCount = likeCount;
     }
 
-    public int getLikeCount() {
+    public Integer getLikeCount() {
         return likeCount;
     }
 
-    public void setArchived(boolean archived) {
-        this.archived = archived;
-    }
-
-    public boolean isArchived() {
-        return archived;
+    @Override
+    public String toString() {
+        String isPublicStr;
+        if (isPublic())
+            isPublicStr = "Public";
+        else
+            isPublicStr = "Private";
+        return author + " " + Msg_ID + " " + isPublicStr + " " + likeCount + " " + message;
     }
 }
