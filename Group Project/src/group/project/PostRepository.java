@@ -22,8 +22,14 @@ public class PostRepository {
                     isPublic = true;
                 else
                     isPublic = false;
+                Integer likeCount = new Integer(file.next());
+                boolean isArchived;
+                if (file.next().equals("false"))
+                    isArchived = false;
+                else
+                    isArchived = true;
                 String message = file.nextLine();
-                add(new Post(Msg_ID, author, message, isPublic));
+                add(new Post(Msg_ID, author, message, isPublic, likeCount, isArchived));
             }
         }
         catch (IOException ex){
@@ -34,6 +40,20 @@ public class PostRepository {
     public static void add(Post newPost){
         postRepo.add(newPost);
         currentID++;
+    }
+
+    public static void deletePost(Post removePost){
+        // Delete post from index returned by search
+        postRepo.remove(search(removePost.getMsg_ID()));
+    }
+
+    public static int search(String ID){
+        for (int i=0; i<postRepo.size(); i++){
+            if (postRepo.get(i).getMsg_ID().equals(ID)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static Post getPost(int ID){

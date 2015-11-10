@@ -1,11 +1,39 @@
-hshami 0 Public I love Tweeter!
+hshami 0 Public 0 false I love Tweeter!
 
-hshami 1 Public Hey I am posting shit
+hshami 1 Public 0 false Hey I am posting shit
 
-hshami 2 Private But this shit is private
+hshami 2 Private 0 false But this shit is private
 
-hshami 3 Public This is a public post SAHN
+hshami 3 Public 0 false This is a public post SAHN
 
-hshami 4 Private This is private
+hshami 4 Private 0 false This is private
 
-sshami 5 Public Hey Tweeter
+sshami 5 Public 0 false Hey Tweeter
+
+sshami 6 Public 0 false Man why is Tweeter so damn awesome??
+
+sshami 7 Private 0 false Hello my followers!
+
+jpinkman 8 Public 0 false Yeah Mr. White! Yeah Science!
+
+hshami 9 Public 0 false Hello World!
+
+hshami 10 Public 0 false This is a post test to see how this post would look if it went to exceed or maybe meet the 140 character limit because I have alot of stuff.
+
+hshami 11 Public 0 false Posting more stuff up in here!!
+
+heisenberg 12 Public 0 false Say my name...
+
+hshami 13 Public 0 false This is a new post
+
+hshami 14 Public 0 false I love to Twit!
+
+hshami 15 Public 0 false Hey Tweeter!!
+
+gfring 16 Public 0 false Welcome to Los Pollos, where something delicious is always cooking.
+
+jpinkman 17 Public 0 false Yooo bitch, hit me up..
+
+hshami 18 Public 0 false Hey, Does this shit work on NetBeans?
+
+hshami 19 Public 0 false Hey, does this shit work on NetBeans?

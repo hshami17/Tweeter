@@ -8,11 +8,14 @@ public class Post {
     private int likeCount;
     private boolean archived;
 
-    Post(String Msg_ID, String author, String message, boolean isPublic){
+    Post(String Msg_ID, String author, String message,
+         boolean isPublic, int likeCount, boolean archived){
         this.Msg_ID = Msg_ID;
         this.author = author;
         this.message = message;
         this.isPublic = isPublic;
+        this.archived = archived;
+        this.likeCount = likeCount;
     }
 
     public void setAuthor(String author) {

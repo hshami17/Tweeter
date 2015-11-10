@@ -1,5 +1,7 @@
 package group.project;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -101,6 +103,18 @@ public class frmRegister {
         GridPane.setColumnSpan(txtBio, 3);
         GridPane.setConstraints(txtBio, 1, 5);
 
+        // Set 50 character limit on bio field
+        final int MAX_SIZE = 50;
+        ChangeListener<String> changeListener = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > MAX_SIZE){
+                    txtBio.setText(txtBio.getText(0, MAX_SIZE));
+                }
+            }
+        };
+        txtBio.textProperty().addListener(changeListener);
+
         // Create register button and have it validate inputs when pressed
         Button btnSignUp = new Button("Sign up");
         btnSignUp.setOnAction(event -> {
@@ -174,7 +188,7 @@ public class frmRegister {
      * @return True or false depending on if new info was valid
      * @throws IOException
      */
-    public static boolean validAccount() throws IOException{
+    private static boolean validAccount() throws IOException{
         Scanner file = new Scanner(new File("LoginInfo.txt"));
         // Make sure username does not exist
         while (file.hasNext()){

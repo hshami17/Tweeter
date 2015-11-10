@@ -18,8 +18,7 @@ public class frmLogin extends Application {
 
     private static TextField txtUserName;
     private static PasswordField txtPassword;
-    private static String username;
-
+    public static boolean exploreMode;
 
     public static void main(String[] args) {launch(args);}
 
@@ -86,8 +85,8 @@ public class frmLogin extends Application {
             try {
                 if (validateUserInfo()) {
                     window.close();
-                    username = txtUserName.getText();
                     Profile.username = txtUserName.getText().trim();
+                    exploreMode = false;
                     frmHomePage.display();
                 } else
                     AlertBox.display("Login Failed", "Wrong username and/or password!", 250, 100);
@@ -107,6 +106,17 @@ public class frmLogin extends Application {
         btnSignUp.defaultButtonProperty().bind(btnSignUp.focusedProperty());
         btnSignUp.setFont(Font.font("Helvetica", 15));
         GridPane.setConstraints(btnSignUp, 2, 3);
+
+        /**
+        // Create explore button to preview Tweeter
+        Button btnExplore = new Button("Explore");
+        btnExplore.setOnAction(event -> {
+            frmHomePage.display();
+            exploreMode = true;
+        });
+        btnExplore.setFont(Font.font("Helvetica", 15));
+        GridPane.setConstraints(btnExplore, 0, 3);
+         */
 
         // Add Tweeter icon to the form
         Image image = new Image("fat-twitter.png");
@@ -129,9 +139,11 @@ public class frmLogin extends Application {
         txtPassword.setTranslateY(4);
         btnLogin.setTranslateY(10);
         btnSignUp.setTranslateY(10);
+       // btnExplore.setTranslateY(10);
 
         //Add everything to grid
-        grid.getChildren().addAll(icnTweeter, lblTitle, lblUserName, txtUserName, lblPassword, txtPassword, btnLogin, btnSignUp);
+        grid.getChildren().addAll(icnTweeter, lblTitle, lblUserName, txtUserName, lblPassword,
+                txtPassword, btnLogin, btnSignUp);
 
         Scene scene = new Scene(grid, 280, 200);
         window.setScene(scene);
@@ -144,7 +156,7 @@ public class frmLogin extends Application {
      * @return True or false if the user information was found
      * @throws FileNotFoundException
      */
-    public static boolean validateUserInfo() throws FileNotFoundException{
+    private static boolean validateUserInfo() throws FileNotFoundException{
         Scanner file = new Scanner(new File("LoginInfo.txt"));
         while(file.hasNext()){
             if((txtUserName.getText().trim().equals(file.next())) &&
