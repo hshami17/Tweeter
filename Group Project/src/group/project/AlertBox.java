@@ -1,5 +1,6 @@
 package group.project;
 
+import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -28,7 +29,9 @@ public class AlertBox {
         // Create a new label and button
         Label lblMessage = new Label(message);
         lblMessage.setWrapText(true);
+        lblMessage.setFont(Font.font("Helvetica", 13));
         Button btnClose = new Button("Close");
+        btnClose.setFont(Font.font("Helvetica", 13));
         // Have close button close the window when clicked
         btnClose.setOnAction(event -> window.close());
         btnClose.defaultButtonProperty().bind(btnClose.focusedProperty());
@@ -42,6 +45,5 @@ public class AlertBox {
         window.setScene(scene);
         // Wait to return to parent window until window is closed
         window.showAndWait();
-
     }
 }
