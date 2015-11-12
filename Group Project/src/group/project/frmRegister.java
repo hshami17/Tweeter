@@ -31,7 +31,7 @@ public class frmRegister {
 
         // Create a new grid pane layout
         GridPane grid = new GridPane();
-        //grid.setGridLinesVisible(true);
+        grid.setStyle("-fx-background-color: #F2F9FF");
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setHgap(10);
         grid.setVgap(8);
@@ -157,7 +157,7 @@ public class frmRegister {
                     window.close();
                 } else
                     // Prompt user that the username already exists
-                    AlertBox.display("Invalid", "The username is already taken!", 220, 100);
+                    AlertBox.display("Invalid", "This username is already taken!", 220, 100);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

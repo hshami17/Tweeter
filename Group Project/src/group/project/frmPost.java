@@ -29,6 +29,7 @@ public class frmPost {
 
         // Create a new grid pane layout
         GridPane grid = new GridPane();
+        grid.setStyle("-fx-background-color: #DCEEFF");
         grid.setHgap(10);
         grid.setVgap(10);
 
@@ -43,26 +44,26 @@ public class frmPost {
             }
         };
         txtPost.textProperty().addListener(changeListener);
-        txtPost.setFont(Font.font("Helvetica", 14));
+        txtPost.setFont(Font.font("Helvetica", 17));
         txtPost.setFocusTraversable(false);
         txtPost.setPromptText("Enter Post");
-        txtPost.setPrefSize(200, 200);
+        txtPost.setPrefSize(300, 140);
         txtPost.setWrapText(true);
-        GridPane.setRowSpan(txtPost, 4);
-        GridPane.setConstraints(txtPost, 1, 0);
+        GridPane.setRowSpan(txtPost, 6);
+        GridPane.setConstraints(txtPost, 3, 0);
 
         // Create the public and private radio buttons
         ToggleGroup group = new ToggleGroup();
         RadioButton rbPublic = new RadioButton("Public");
-        rbPublic.setFont(Font.font("Helvetica", 13));
+        rbPublic.setFont(Font.font("Helvetica", 15));
         rbPublic.setSelected(true);
         rbPublic.setToggleGroup(group);
-        rbPublic.setTranslateY(-70);
-        GridPane.setConstraints(rbPublic, 2, 3);
+        GridPane.setConstraints(rbPublic, 4, 3);
+
         RadioButton rbPrivate = new RadioButton("Private");
-        rbPrivate.setFont(Font.font("Helvetica", 13));
+        rbPrivate.setFont(Font.font("Helvetica", 15));
         rbPrivate.setToggleGroup(group);
-        GridPane.setConstraints(rbPrivate, 2, 3);
+        GridPane.setConstraints(rbPrivate, 4, 5);
 
         // Create a new post button to post the content and add to repo
         Button btnPost = new Button("Post");
@@ -85,42 +86,51 @@ public class frmPost {
                 // Create a new post authored by current user
                 Profile.newPost(content, isPublic);
                 PostRepository.saveAllPosts();
-                /**
-                 // Save post to text file
-                 FileWriter file = new FileWriter("Post.txt", true);
-                 BufferedWriter out = new BufferedWriter(file);
-                 out.write("\n" + username + " " + ID + " " + isPublicStr + " " +
-                 "0" +  " " + content + "\n");
-                 out.close();
-                 */
 
-                frmHomePage.getAllPublicPosts();
+                if (rbPublic.isSelected())
+                    frmHomePage.getAllPublicPosts();
+                else
+                    frmHomePage.getAllPrivatePosts();
+
                 window.close();
             }
         });
         btnPost.defaultButtonProperty().bind(btnPost.focusedProperty());
-        btnPost.setFont(Font.font("Helvetica", 14));
-        GridPane.setConstraints(btnPost, 1, 5);
+        btnPost.setFont(Font.font("Helvetica", 15));
+        GridPane.setConstraints(btnPost, 3, 7);
 
         // Create a cancel button to close the post window
         Button btnCancel = new Button("Cancel");
-        btnCancel.setOnAction(event -> window.close());
-        btnCancel.setFont(Font.font("Helvetica", 14));
+        btnCancel.setOnAction(event -> {
+            if (!txtPost.getText().trim().isEmpty()) {
+                ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",
+                        300, 110);
+                if (ConfirmBox.result)
+                    window.close();
+            } else
+                window.close();
+        });
+        btnCancel.setFont(Font.font("Helvetica", 15));
         btnCancel.defaultButtonProperty().bind(btnCancel.focusedProperty());
-        GridPane.setConstraints(btnCancel, 1, 5);
+        GridPane.setConstraints(btnCancel, 3, 7);
         btnCancel.setTranslateX(57);
 
 
         // Translate X and Y properties for cleaner GUI
         txtPost.setTranslateY(10);
+        txtPost.setTranslateX(-10);
+        btnPost.setTranslateX(-10);
         btnCancel.setTranslateX(57);
-        rbPublic.setTranslateY(-70);
+        btnPost.setTranslateY(-5);
+        btnCancel.setTranslateY(-5);
+        rbPublic.setTranslateX(-10);
+        rbPrivate.setTranslateX(-10);
 
         // Add all controls to the grid
         grid.getChildren().addAll(txtPost, btnPost, btnCancel, rbPublic, rbPrivate);
 
         // Create the scene and display the window
-        Scene scene = new Scene(grid, 300, 250);
+        Scene scene = new Scene(grid, 420, 190);
         window.setScene(scene);
         window.showAndWait();
     }

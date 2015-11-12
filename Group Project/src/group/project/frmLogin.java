@@ -40,8 +40,7 @@ public class frmLogin extends Application {
 
         // GridPane with 10px padding around edge
         GridPane grid = new GridPane();
-        grid.setStyle("-fx-background-color: #EFF2FB");
-        //grid.setGridLinesVisible(true);
+        grid.setStyle("-fx-background-color: #F2F9FF");
         // Insets - constrains use (top, right, bottom, left)
         grid.setPadding(new Insets(20, 10, 10, 15));
         // Set the horizontal and vertical gap between controls

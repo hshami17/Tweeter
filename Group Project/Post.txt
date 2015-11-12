@@ -1,34 +1,38 @@
-hshami 0 Public 6                   I love Tweeter!
+hshami 0 Public 7                                                     I love Tweeter!
 
-hshami 2 Private 0                   But this shit is private
+hshami 3 Public 2                                                     This is a public post SAHN
 
-hshami 3 Public 1                   This is a public post SAHN
+hshami 4 Private 0                                                     This is private
 
-hshami 4 Private 0                   This is private
+sshami 5 Public 1                                                     Hey Tweeter
 
-sshami 5 Public 1                   Hey Tweeter
+sshami 6 Public 0                                                     Man why is Tweeter so damn awesome??
 
-sshami 6 Public 0                   Man why is Tweeter so damn awesome??
+sshami 7 Private 0                                                     Hello my followers!
 
-sshami 7 Private 0                   Hello my followers!
+jpinkman 8 Public 0                                                     Yeah Mr. White! Yeah Science!
 
-jpinkman 8 Public 0                   Yeah Mr. White! Yeah Science!
+hshami 10 Public 1                                                     This is a post test to see how this post would look if it went to exceed or maybe meet the 140 character limit because I have alot of stuff.
 
-hshami 9 Public 0                   Hello World!
+hshami 11 Public 1                                                     Posting more stuff up in here!!
 
-hshami 10 Public 1                   This is a post test to see how this post would look if it went to exceed or maybe meet the 140 character limit because I have alot of stuff.
+heisenberg 12 Public 3                                                     Say my name...
 
-hshami 11 Public 1                   Posting more stuff up in here!!
+gfring 16 Public 11                                                     Come visit Los Pollos, where something delicious is always cooking.
 
-heisenberg 12 Public 3                   Say my name...
+jpinkman 17 Public 12                                                     Yooo bitch, hit me up..
 
-hshami 14 Public 9                   I love to Twit!
+hshami 18 Public 12                                      Woah Jesse Pinkman uses Tweeter?? Sweet!
 
-hshami 15 Public 5                   Hey Tweeter!!
+bettercallsaul 19 Public 8                                If you ever find yourself in a mess with the law, you better call Saul!
 
-gfring 16 Public 11                   Welcome to Los Pollos, where something delicious is always cooking.
+hshami 20 Public 4                           Saul Goodman too? This is insane..  
 
-jpinkman 17 Public 10                   Yooo bitch, hit me up..
+ukhalid 22 Public 4                      Tweeter is going to take over the world!! Get ready folks!
 
-hshami 18 Public 10    Woah Jesse Pinkman uses Tweeter?? Sweet!
+jpinkman 25 Private 1              Private posts bitch, thats what I'm talking about
+
+heisenberg 30 Private 0         Jesse! We have to cook!
+
+hshami 34 Private 1        Hello to all of my followers!
 

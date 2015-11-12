@@ -34,7 +34,7 @@ public class UserRepository {
      * @return The index value where the user was found or -1
      * if not found
      */
-    public static int search(String username){
+    private static int search(String username){
         for (int i=0; i<userRepo.size(); i++){
             if (userRepo.get(i).getUsername().equals(username)){
                 return i;
