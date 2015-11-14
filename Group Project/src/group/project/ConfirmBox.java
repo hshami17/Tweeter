@@ -10,7 +10,7 @@ import javafx.geometry.*;
 
 public class ConfirmBox {
 
-    public static boolean result;
+    public static boolean result = false;
 
     /**
      * Display an alert box

@@ -15,9 +15,12 @@ import java.util.*;
 
 public class frmPost {
 
+    private static Stage window;
+    private static TextArea txtPost;
+
     public static void display(){
         // Create a new post window
-        Stage window = new Stage();
+        window = new Stage();
         window.setTitle("New Post");
         window.setResizable(false);
 
@@ -27,6 +30,11 @@ public class frmPost {
         // Disallow inputs to parent window
         window.initModality(Modality.APPLICATION_MODAL);
 
+        window.setOnCloseRequest(event -> {
+            event.consume();
+            closeWindow();
+        });
+
         // Create a new grid pane layout
         GridPane grid = new GridPane();
         grid.setStyle("-fx-background-color: #DCEEFF");
@@ -34,7 +42,7 @@ public class frmPost {
         grid.setVgap(10);
 
         // Set 140 character limit on post field
-        TextArea txtPost = new TextArea();
+        txtPost = new TextArea();
         ChangeListener<String> changeListener = new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -101,15 +109,7 @@ public class frmPost {
 
         // Create a cancel button to close the post window
         Button btnCancel = new Button("Cancel");
-        btnCancel.setOnAction(event -> {
-            if (!txtPost.getText().trim().isEmpty()) {
-                ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",
-                        300, 110);
-                if (ConfirmBox.result)
-                    window.close();
-            } else
-                window.close();
-        });
+        btnCancel.setOnAction(event -> closeWindow());
         btnCancel.setFont(Font.font("Helvetica", 15));
         btnCancel.defaultButtonProperty().bind(btnCancel.focusedProperty());
         GridPane.setConstraints(btnCancel, 3, 7);
@@ -133,5 +133,15 @@ public class frmPost {
         Scene scene = new Scene(grid, 420, 190);
         window.setScene(scene);
         window.showAndWait();
+    }
+
+    private static void closeWindow(){
+        if (!txtPost.getText().trim().isEmpty()) {
+            ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",
+                    300, 110);
+            if (ConfirmBox.result)
+                window.close();
+        } else
+            window.close();
     }
 }

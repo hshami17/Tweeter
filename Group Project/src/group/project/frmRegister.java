@@ -17,6 +17,7 @@ public class frmRegister {
 
     private static TextField txtUsername;
     private static TextField txtPassword;
+    public static boolean success = false;
 
     /**
      * Display the "New Account" window
@@ -60,11 +61,36 @@ public class frmRegister {
         GridPane.setColumnSpan(txtUsername, 2);
         GridPane.setConstraints(txtUsername, 1, 1);
 
+        // Set 11 character limit on username field
+        int maxSizeUserTxt = 11;
+        ChangeListener<String> changeListenerUser = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > maxSizeUserTxt){
+                    txtUsername.setText(txtUsername.getText(0, maxSizeUserTxt));
+                }
+            }
+        };
+        txtUsername.textProperty().addListener(changeListenerUser);
+
+
         // Create a text field for password input
         txtPassword = new PasswordField();
         txtPassword.setMaxWidth(150);
         GridPane.setColumnSpan(txtPassword, 2);
         GridPane.setConstraints(txtPassword, 1, 2);
+
+        // Set 11 character limit on password field
+        int maxSizePassTxt = 11;
+        ChangeListener<String> changeListenerPass = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > maxSizePassTxt){
+                    txtPassword.setText(txtPassword.getText(0, maxSizePassTxt));
+                }
+            }
+        };
+        txtPassword.textProperty().addListener(changeListenerPass);
 
         // Create radio buttons for gender selection
         ToggleGroup group = new ToggleGroup();
@@ -89,6 +115,18 @@ public class frmRegister {
         txtAge.setFont(Font.font("Helvetica", 13));
         GridPane.setConstraints(txtAge, 1, 4);
 
+        // Set 3 character limit on age field
+        int maxSizeAgeTxt = 3;
+        ChangeListener<String> changeListenerAge = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > maxSizeAgeTxt){
+                    txtAge.setText(txtAge.getText(0, maxSizeAgeTxt));
+                }
+            }
+        };
+        txtAge.textProperty().addListener(changeListenerAge);
+
         // Create a label for the bio text area
         Label lblBio = new Label("Bio:");
         lblBio.setFont(Font.font("Helvetica", 13));
@@ -104,16 +142,16 @@ public class frmRegister {
         GridPane.setConstraints(txtBio, 1, 5);
 
         // Set 50 character limit on bio field
-        final int MAX_SIZE = 50;
-        ChangeListener<String> changeListener = new ChangeListener<String>() {
+        int maxSizeBioTxt = 50;
+        ChangeListener<String> changeListenerBio = new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.length() > MAX_SIZE){
-                    txtBio.setText(txtBio.getText(0, MAX_SIZE));
+                if (newValue.length() > maxSizeBioTxt){
+                    txtBio.setText(txtBio.getText(0, maxSizeBioTxt));
                 }
             }
         };
-        txtBio.textProperty().addListener(changeListener);
+        txtBio.textProperty().addListener(changeListenerBio);
 
         // Create register button and have it validate inputs when pressed
         Button btnSignUp = new Button("Sign up");
@@ -126,7 +164,12 @@ public class frmRegister {
                         txtBio.getText().trim().isEmpty()) {
                     // Prompt user that a field is empty
                     AlertBox.display("Invalid", "Please fill out all of the fields", 220, 100);
-                } else if (validAccount()) {
+                }
+                else if (!txtAge.getText().matches("\\d+")){
+                    AlertBox.display("Invalid", "Please enter a valid age", 220, 100);
+                }
+                else if (validAccount()) {
+                    success = true;
                     // Insert new login info into text file
                     FileWriter file = new FileWriter("LoginInfo.txt", true);
                     BufferedWriter out = new BufferedWriter(file);

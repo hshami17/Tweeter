@@ -1,6 +1,8 @@
 package group.project;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
@@ -16,7 +18,7 @@ import java.util.Scanner;
 
 public class frmLogin extends Application {
 
-    private static TextField txtUserName;
+    private static TextField txtUsername;
     private static PasswordField txtPassword;
     public static boolean exploreMode;
 
@@ -38,7 +40,7 @@ public class frmLogin extends Application {
         window.setTitle("Tweeter Login");
         window.setResizable(false);
 
-        // GridPane with 10px padding around edge
+        // Create a new Grid Pane layout
         GridPane grid = new GridPane();
         grid.setStyle("-fx-background-color: #F2F9FF");
         // Insets - constrains use (top, right, bottom, left)
@@ -62,10 +64,23 @@ public class frmLogin extends Application {
         GridPane.setConstraints(lblUserName, 0, 1);
 
         // Name text field
-        txtUserName = new TextField("hshami");
-        txtUserName.setFont(Font.font("Helvetica", 18));
-        GridPane.setConstraints(txtUserName, 1, 1);
-        GridPane.setColumnSpan(txtUserName, 2);
+        txtUsername = new TextField();
+        //txtUsername.setText("hshami");
+        txtUsername.setFont(Font.font("Helvetica", 18));
+        GridPane.setConstraints(txtUsername, 1, 1);
+        GridPane.setColumnSpan(txtUsername, 2);
+
+        // Set 11 character limit on username field
+        int maxSizeUserTxt = 11;
+        ChangeListener<String> changeListenerUser = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > maxSizeUserTxt){
+                    txtUsername.setText(txtUsername.getText(0, maxSizeUserTxt));
+                }
+            }
+        };
+        txtUsername.textProperty().addListener(changeListenerUser);
 
         // Password Label
         Label lblPassword = new Label("Password:");
@@ -74,10 +89,22 @@ public class frmLogin extends Application {
 
         // Password text field
         txtPassword = new PasswordField();
-        txtPassword.setText("toilet");
+        //txtPassword.setText("toilet");
         txtPassword.setFont(Font.font("Helvetica", 18));
         GridPane.setConstraints(txtPassword, 1, 2);
         GridPane.setColumnSpan(txtPassword, 2);
+
+        // Set 11 character limit on password field
+        int maxSizePassTxt = 11;
+        ChangeListener<String> changeListenerPass = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.length() > maxSizePassTxt){
+                    txtPassword.setText(txtPassword.getText(0, maxSizePassTxt));
+                }
+            }
+        };
+        txtPassword.textProperty().addListener(changeListenerPass);
 
         // Make login button and handle text validation when pressed
         Button btnLogin = new Button("Log in");
@@ -85,7 +112,11 @@ public class frmLogin extends Application {
             try {
                 if (validateUserInfo()) {
                     window.close();
-                    Profile.username = txtUserName.getText().trim();
+                    // Clear current profile info
+                    Profile.clear();
+                    // Get the username from text field and get current user likes from file
+                    Profile.username = txtUsername.getText().trim();
+                    Profile.retrieveLikes();
                     exploreMode = false;
                     frmHomePage.display();
                 } else
@@ -100,23 +131,24 @@ public class frmLogin extends Application {
 
         // Make register button open new window to create account when pressed
         Button btnSignUp = new Button("Sign up");
-        btnSignUp.setOnAction(event -> {
-            frmRegister.display();
-        });
+        btnSignUp.setOnAction(event -> frmRegister.display());
         btnSignUp.defaultButtonProperty().bind(btnSignUp.focusedProperty());
         btnSignUp.setFont(Font.font("Helvetica", 15));
         GridPane.setConstraints(btnSignUp, 2, 3);
 
-        /**
+
         // Create explore button to preview Tweeter
         Button btnExplore = new Button("Explore");
         btnExplore.setOnAction(event -> {
-            frmHomePage.display();
             exploreMode = true;
+            Profile.clear();
+            window.close();
+            frmHomePage.display();
         });
+        btnExplore.defaultButtonProperty().bind(btnExplore.focusedProperty());
         btnExplore.setFont(Font.font("Helvetica", 15));
         GridPane.setConstraints(btnExplore, 0, 3);
-         */
+
 
         // Add Tweeter icon to the form
         Image image = new Image("fat-twitter.png");
@@ -135,15 +167,16 @@ public class frmLogin extends Application {
         lblTitle.setTranslateX(5);
         lblUserName.setTranslateY(-2);
         lblPassword.setTranslateY(4);
-        txtUserName.setTranslateY(-2);
+        txtUsername.setTranslateY(-2);
         txtPassword.setTranslateY(4);
         btnLogin.setTranslateY(10);
         btnSignUp.setTranslateY(10);
-       // btnExplore.setTranslateY(10);
+        btnExplore.setTranslateY(10);
+        btnExplore.setTranslateX(-3);
 
         //Add everything to grid
-        grid.getChildren().addAll(icnTweeter, lblTitle, lblUserName, txtUserName, lblPassword,
-                txtPassword, btnLogin, btnSignUp);
+        grid.getChildren().addAll(icnTweeter, lblTitle, lblUserName, txtUsername, lblPassword,
+                txtPassword, btnLogin, btnSignUp, btnExplore);
 
         Scene scene = new Scene(grid, 280, 200);
         window.setScene(scene);
@@ -159,7 +192,7 @@ public class frmLogin extends Application {
     private static boolean validateUserInfo() throws FileNotFoundException{
         Scanner file = new Scanner(new File("LoginInfo.txt"));
         while(file.hasNext()){
-            if((txtUserName.getText().trim().equals(file.next())) &&
+            if((txtUsername.getText().trim().equals(file.next())) &&
                     txtPassword.getText().trim().equals(file.next()))
                 return true;
         }
