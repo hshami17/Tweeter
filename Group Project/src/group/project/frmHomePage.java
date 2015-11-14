@@ -21,6 +21,7 @@ import java.util.*;
 
 public class frmHomePage {
 
+    private static Stage window;
     private static BorderPane borderPane;
     private static VBox centerPane;
     private static ScrollPane scrollPane;
@@ -29,12 +30,17 @@ public class frmHomePage {
 
     public static void display(){
         // Create new window
-        Stage window = new Stage();
+        window = new Stage();
         window.setTitle("Tweeter Home");
         window.setResizable(false);
 
         // Disallow inputs to parent window
         window.initModality(Modality.APPLICATION_MODAL);
+
+        window.setOnCloseRequest(event -> {
+            event.consume();
+            closeWindow();
+        });
 
         // Declare all the layouts
         borderPane = new BorderPane();
@@ -122,14 +128,9 @@ public class frmHomePage {
         Button btnLogOut = new Button("Log out");
         btnLogOut.setFont(Font.font("Helvetica", 15));
         btnLogOut.setTranslateY(13);
+        btnLogOut.setTranslateX(-2);
         btnLogOut.defaultButtonProperty().bind(btnLogOut.focusedProperty());
-        btnLogOut.setOnAction(event -> {
-            ConfirmBox.display("Log out", "Are you sure you want to log out?", 300, 110);
-            if (ConfirmBox.result) {
-                window.close();
-                frmLogin.display();
-            }
-        });
+        btnLogOut.setOnAction(event -> closeWindow());
 
         // Create the public and private feed radio buttons
         ToggleGroup group = new ToggleGroup();
@@ -167,13 +168,34 @@ public class frmHomePage {
         icnTweeter.setCache(true);
         icnTweeter.setTranslateX(-28);
 
-        /**
+        // Make the proper changes to the home page when in explore mode
          if (frmLogin.exploreMode){
-            btnPost.setVisible(false);
-            btnLogOut.setText("Exit");
-            btnLogOut.setVisible(false);
+             // Give user option to create an account
+             Button btnRegister = new Button("Register");
+             btnRegister.setOnAction(event -> {
+                 frmRegister.display();
+                 if (frmRegister.success){
+                     window.close();
+                     frmLogin.display();
+                 }
+             });
+             btnRegister.setFont(Font.font("Helvetica", 15));
+             btnRegister.defaultButtonProperty().bind(btnRegister.focusedProperty());
+             btnRegister.setTranslateX(7);
+             leftPane.getChildren().add(btnRegister);
+             txtUserInfo.setText("");
+             // Disable certain buttons if exploring
+             rbPrivate.setDisable(true);
+             btnPost.setDisable(true);
+             btnEditProfile.setDisable(true);
+             btnTaggedPosts.setDisable(true);
+             btnSearchByHashtag.setDisable(true);
+             btnBuddyList.setDisable(true);
+             btnLogOut.setText("Exit");
+             btnLogOut.setTranslateX(-3);
+             btnLogOut.setPrefSize(70, 10);
         }
-         */
+
 
         // Add controls to the top pane
         topPane.getChildren().addAll(icnTweeter, txtTweeter, rbPublic, rbPrivate, btnPost, btnLogOut);
@@ -193,6 +215,20 @@ public class frmHomePage {
         window.showAndWait();
     }
 
+    private static void closeWindow(){
+        if (!frmLogin.exploreMode) {
+            ConfirmBox.display("Log out", "Are you sure you want to log out?", 300, 110);
+            if (ConfirmBox.result) {
+                window.close();
+                frmLogin.display();
+            }
+        }
+        else {
+            window.close();
+            frmLogin.display();
+        }
+    }
+
     /**
      * Get all public posts from post repo and
      * them add to the center pane.
@@ -204,19 +240,19 @@ public class frmHomePage {
         centerPane.setPadding(new Insets(5, 5, 5, 5));
         for (int i=PostRepository.getRepoSize()-1; i >= 0; i--) {
             Post addPost = PostRepository.getPost(i);
-                if (addPost.isPublic()) {
-                    // Get the post author
-                    Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
-                    txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
+            if (addPost.isPublic()) {
+                // Get the post author
+                Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
+                txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
 
-                    // Get the post
-                    Text txtPost = new Text(addPost.getMessage().trim());
-                    txtPost.setFont(Font.font("Helvetica", 17));
-                    txtPost.setWrappingWidth(400);
+                // Get the post
+                Text txtPost = new Text(addPost.getMessage().trim());
+                txtPost.setFont(Font.font("Helvetica", 17));
+                txtPost.setWrappingWidth(400);
 
-                    centerPane.getChildren().addAll(txtAuthor, txtPost);
-                    addPostComponents(addPost);
-                }
+                centerPane.getChildren().addAll(txtAuthor, txtPost);
+                addPostComponents(addPost);
+            }
         }
     }
 
@@ -265,6 +301,7 @@ public class frmHomePage {
                 else
                     getAllPrivatePosts();
             });
+            if (frmLogin.exploreMode) {btnLike.setDisable(true);}
             centerPane.getChildren().add(btnLike);
             nxtBtn_Y_Translate = 55;
         }
@@ -317,6 +354,7 @@ public class frmHomePage {
             btnFollow.setOnAction(event -> {
 
             });
+            if (frmLogin.exploreMode) {btnFollow.setDisable(true);}
             centerPane.getChildren().add(btnFollow);
         }
 
