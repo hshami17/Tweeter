@@ -1,7 +1,5 @@
 package group.project;
 
-import static group.project.frmHomePage.getAllPrivatePosts;
-import static group.project.frmHomePage.getAllPublicPosts;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
