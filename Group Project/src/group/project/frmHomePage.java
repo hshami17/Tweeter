@@ -66,10 +66,7 @@ public class frmHomePage {
 
         // Create edit profile button and open edit window when clicked
         Button btnEditProfile = new Button("Edit Profile");
-        btnEditProfile.setOnAction(event -> {
-
-
-        });
+        btnEditProfile.setOnAction(event -> frmEditProfile.display());
         btnEditProfile.defaultButtonProperty().bind(btnEditProfile.focusedProperty());
         btnEditProfile.setFont(Font.font("Helvetica", 15));
         btnEditProfile.setTranslateX(7);
