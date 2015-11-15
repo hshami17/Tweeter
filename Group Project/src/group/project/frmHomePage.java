@@ -94,10 +94,7 @@ public class frmHomePage {
 
         // Create a buddy list button to open a window containing your followers and following
         Button btnBuddyList = new Button("Buddy List");
-        btnBuddyList.setOnAction(event -> {
-
-
-        });
+        btnBuddyList.setOnAction(event -> frmBuddyList.display());
         btnBuddyList.defaultButtonProperty().bind(btnBuddyList.focusedProperty());
         btnBuddyList.setFont(Font.font("Helvetica", 15));
         btnBuddyList.setTranslateX(7);
