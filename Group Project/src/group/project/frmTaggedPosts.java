@@ -15,6 +15,8 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
+import java.io.IOException;
+
 public class frmTaggedPosts {
 
     private static BorderPane borderPane;
@@ -149,12 +151,17 @@ public class frmTaggedPosts {
                 btnFollowDelete.setTranslateX(68);
                 txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
             } else {
-                taggedPost.setLikeCount(taggedPost.getLikeCount() - 1);
-                Profile.removeLikedPost(taggedPost.getMsg_ID());
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Like");
-                btnFollowDelete.setTranslateX(55);
-                txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
+                try {
+                    taggedPost.setLikeCount(taggedPost.getLikeCount() - 1);
+                    Profile.removeLikedPost(taggedPost.getMsg_ID());
+                    PostRepository.saveAllPosts();
+                    btnLikeUpdate.setText("Like");
+                    btnFollowDelete.setTranslateX(55);
+                    txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
+                }
+                catch (IOException ex){
+                    ex.printStackTrace();
+                }
             }
         });
         btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
