@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class UserRepository {
     private static ArrayList<User> userRepo;
 
-    UserRepository(){
+    public static void populateUserRepository(){
         try {
             userRepo = new ArrayList<>();
             Scanner file = new Scanner(new File("UserInfo.txt"));
@@ -34,7 +34,7 @@ public class UserRepository {
      * @return The index value where the user was found or -1
      * if not found
      */
-    private static int search(String username){
+    public static int search(String username){
         for (int i=0; i<userRepo.size(); i++){
             if (userRepo.get(i).getUsername().equals(username)){
                 return i;

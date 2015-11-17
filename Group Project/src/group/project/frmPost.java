@@ -2,7 +2,6 @@ package group.project;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -80,19 +79,8 @@ public class frmPost {
                 AlertBox.display("Invalid", "Please enter content for your post", 250, 100);
             }
             else {
-                // Store new post info into variables
-                String username = Profile.username;
-                // Put new post into the next ID
-                PostRepository.currentID++;
-                String ID = PostRepository.currentID.toString();
-                boolean isPublic = rbPublic.isSelected();
-                String isPublicStr = "Public";
-                if (!rbPublic.isSelected()) {
-                    isPublicStr = "Private";
-                }
-                String content = txtPost.getText();
                 // Create a new post authored by current user
-                Profile.newPost(content, isPublic);
+                Profile.newPost(txtPost.getText(), rbPublic.isSelected());
                 PostRepository.saveAllPosts();
 
                 if (rbPublic.isSelected())

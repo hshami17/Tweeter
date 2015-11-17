@@ -15,9 +15,8 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
-import javax.swing.event.ChangeListener;
-import java.io.*;
-import java.util.*;
+import javax.imageio.IIOException;
+import java.io.IOException;
 
 public class frmHomePage {
 
@@ -73,10 +72,7 @@ public class frmHomePage {
 
         // Create a tagged post button and open users tagged posts
         Button btnTaggedPosts = new Button("Tagged Posts");
-        btnTaggedPosts.setOnAction(event -> {
-
-
-        });
+        btnTaggedPosts.setOnAction(event -> frmTaggedPosts.display());
         btnTaggedPosts.defaultButtonProperty().bind(btnTaggedPosts.focusedProperty());
         btnTaggedPosts.setFont(Font.font("Helvetica", 15));
         btnTaggedPosts.setTranslateX(7);
@@ -165,7 +161,7 @@ public class frmHomePage {
         // Make the proper changes to the home page when in explore mode
          if (frmLogin.exploreMode){
              // Give user option to create an account
-             Button btnRegister = new Button("Register");
+             Button btnRegister = new Button("Sign up");
              btnRegister.setOnAction(event -> {
                  frmRegister.display();
                  if (frmRegister.success){
@@ -177,13 +173,12 @@ public class frmHomePage {
              btnRegister.defaultButtonProperty().bind(btnRegister.focusedProperty());
              btnRegister.setTranslateX(7);
              leftPane.getChildren().add(btnRegister);
-             txtUserInfo.setText("");
+             txtUserInfo.setText("Register for Tweeter above!");
              // Disable certain buttons if exploring
              rbPrivate.setDisable(true);
              btnPost.setDisable(true);
              btnEditProfile.setDisable(true);
              btnTaggedPosts.setDisable(true);
-             btnSearchByHashtag.setDisable(true);
              btnBuddyList.setDisable(true);
              btnLogOut.setText("Exit");
              btnLogOut.setTranslateX(-3);
@@ -229,23 +224,26 @@ public class frmHomePage {
      */
     public static void getAllPublicPosts(){
         rbPublic.setSelected(true);
-        centerPane = new VBox(6);
+        centerPane = new VBox(5);
         scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
-        for (int i=PostRepository.getRepoSize()-1; i >= 0; i--) {
-            Post addPost = PostRepository.getPost(i);
-            if (addPost.isPublic()) {
-                // Get the post author
-                Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
-                txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
+        // Check to see if size is 0
+        if (PostRepository.getRepoSize() != 0) {
+            for (int i = PostRepository.getRepoSize() - 1; i >= 0; i--) {
+                Post addPost = PostRepository.getPost(i);
+                if (addPost.isPublic()) {
+                    // Get the post author
+                    Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
+                    txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
 
-                // Get the post
-                Text txtPost = new Text(addPost.getMessage().trim());
-                txtPost.setFont(Font.font("Helvetica", 17));
-                txtPost.setWrappingWidth(400);
+                    // Get the post
+                    Text txtPost = new Text(addPost.getMessage().trim());
+                    txtPost.setFont(Font.font("Helvetica", 17));
+                    txtPost.setWrappingWidth(400);
 
-                centerPane.getChildren().addAll(txtAuthor, txtPost);
-                addPostComponents(addPost);
+                    centerPane.getChildren().addAll(txtAuthor, txtPost);
+                    addPostComponents(addPost);
+                }
             }
         }
     }
@@ -257,71 +255,57 @@ public class frmHomePage {
         centerPane = new VBox(6);
         scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
-        // Go through post repo and get the private posts
-        for (int i=PostRepository.getRepoSize()-1; i >= 0; i--) {
-            Post addPost = PostRepository.getPost(i);
-            if (!addPost.isPublic()) {
-                // Get the post author
-                Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
-                txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
+        if (PostRepository.getRepoSize() != 0) {
+            // Go through post repo and get the private posts
+            for (int i = PostRepository.getRepoSize() - 1; i >= 0; i--) {
+                Post addPost = PostRepository.getPost(i);
+                if (!addPost.isPublic()) {
+                    // Get the post author
+                    Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
+                    txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
 
-                // Get the post
-                Text txtPost = new Text(addPost.getMessage().trim());
-                txtPost.setFont(Font.font("Helvetica", 17));
-                txtPost.setWrappingWidth(400);
+                    // Get the post
+                    Text txtPost = new Text(addPost.getMessage().trim());
+                    txtPost.setFont(Font.font("Helvetica", 17));
+                    txtPost.setWrappingWidth(400);
 
-                // Add items to the center pane
-                centerPane.getChildren().addAll(txtAuthor, txtPost);
-                // Add post interaction buttons
-                addPostComponents(addPost);
+                    // Add items to the center pane
+                    centerPane.getChildren().addAll(txtAuthor, txtPost);
+                    // Add post interaction buttons
+                    addPostComponents(addPost);
+                }
             }
         }
     }
 
     private static void addPostComponents(Post addPost){
-        int nxtBtn_Y_Translate;
-        // If post not previously liked, create like button
-        if (!Profile.getLikedPost(addPost.getMsg_ID())) {
-            Button btnLike = new Button("Like");
-            btnLike.setFont(Font.font("Helvetica", 15));
-            btnLike.setTranslateY(20);
-            btnLike.defaultButtonProperty().bind(btnLike.focusedProperty());
-            btnLike.setOnAction(event -> {
-                addPost.setLikeCount(addPost.getLikeCount() + 1);
-                Profile.addLikedPost(addPost);
-                PostRepository.saveAllPosts();
-                if (rbPublic.isSelected())
-                    getAllPublicPosts();
-                else
-                    getAllPrivatePosts();
-            });
-            if (frmLogin.exploreMode) {btnLike.setDisable(true);}
-            centerPane.getChildren().add(btnLike);
-            nxtBtn_Y_Translate = 55;
-        }
-        // Else if post previously liked, create unlike button
-        else{
-            Button btnUnlike = new Button("Unlike");
-            btnUnlike.setFont(Font.font("Helvetica", 15));
-            btnUnlike.setTranslateY(20);
-            btnUnlike.defaultButtonProperty().bind(btnUnlike.focusedProperty());
-            btnUnlike.setOnAction(event -> {
-                addPost.setLikeCount(addPost.getLikeCount() - 1);
-                Profile.removeLikedPost(addPost.getMsg_ID());
-                PostRepository.saveAllPosts();
-                if (rbPublic.isSelected())
-                    getAllPublicPosts();
-                else
-                    getAllPrivatePosts();
-            });
-            centerPane.getChildren().add(btnUnlike);
-            nxtBtn_Y_Translate = 68;
-        }
+        // Create text to display likes
+        Text txtLikes = new Text();
 
-        // Show delete button if author is logged in user
-        if (addPost.getAuthor().trim().equals(Profile.username)){
-            Button btnDelete = new Button("Delete");
-            btnDelete.setOnAction(event -> {
+        // Set initial state of like update button
+        Button btnLikeUpdate = new Button();
+        if (Profile.getLikedPost(addPost.getMsg_ID()))
+            btnLikeUpdate.setText("Unlike");
+        else
+            btnLikeUpdate.setText("Like");
+
+        // Create button to display follow or delete
+        Button btnFollowDelete = new Button();
+        // Set initial state of follow/delete button
+        if (addPost.getAuthor().trim().equals(Profile.username))
+            btnFollowDelete.setText("Delete");
+        else
+            btnFollowDelete.setText("Follow");
+        // Set the X position of the follow/delete button
+        if (btnLikeUpdate.getText().equals("Like"))
+            btnFollowDelete.setTranslateX(55);
+        else
+            btnFollowDelete.setTranslateX(68);
+
+
+        // Execute appropriate action depending on button state
+        btnFollowDelete.setOnAction(event -> {
+            if (btnFollowDelete.getText().equals("Delete")) {
                 ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
                 if (ConfirmBox.result) {
                     PostRepository.deletePost(addPost);
@@ -331,29 +315,45 @@ public class frmHomePage {
                     else
                         getAllPrivatePosts();
                 }
-            });
-            btnDelete.defaultButtonProperty().bind(btnDelete.focusedProperty());
-            btnDelete.setFont(Font.font("Helvetica", 15));
-            btnDelete.setTranslateX(nxtBtn_Y_Translate);
-            btnDelete.setTranslateY(-15);
-            centerPane.getChildren().add(btnDelete);
-        }
-        // Show follow button if not logged in user's post
-        else{
-            Button btnFollow = new Button("Follow");
-            btnFollow.setFont(Font.font("Helvetica", 15));
-            btnFollow.setTranslateX(nxtBtn_Y_Translate);
-            btnFollow.setTranslateY(-15);
-            btnFollow.defaultButtonProperty().bind(btnFollow.focusedProperty());
-            btnFollow.setOnAction(event -> {
+            }
+        });
+        btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());
+        btnFollowDelete.setFont(Font.font("Helvetica", 15));
+        btnFollowDelete.setTranslateY(-15);
 
-            });
-            if (frmLogin.exploreMode) {btnFollow.setDisable(true);}
-            centerPane.getChildren().add(btnFollow);
+
+        // Execute appropriate action depending on state of update like button
+        btnLikeUpdate.setOnAction(event -> {
+            if (btnLikeUpdate.getText().equals("Like")) {
+                addPost.setLikeCount(addPost.getLikeCount() + 1);
+                Profile.addLikedPost(addPost);
+                PostRepository.saveAllPosts();
+                btnLikeUpdate.setText("Unlike");
+                btnFollowDelete.setTranslateX(68);
+                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
+            } else {
+                addPost.setLikeCount(addPost.getLikeCount() - 1);
+                Profile.removeLikedPost(addPost.getMsg_ID());
+                PostRepository.saveAllPosts();
+                btnLikeUpdate.setText("Like");
+                btnFollowDelete.setTranslateX(55);
+                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
+            }
+        });
+        btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
+        btnLikeUpdate.setFont(Font.font("Helvetica", 15));
+        btnLikeUpdate.setTranslateY(20);
+
+        centerPane.getChildren().addAll(btnLikeUpdate, btnFollowDelete);
+
+        // Disable post interaction buttons if in explore mode
+        if (frmLogin.exploreMode){
+            btnLikeUpdate.setDisable(true);
+            btnFollowDelete.setDisable(true);
         }
 
         // Show likes for a post
-        Text txtLikes = new Text(addPost.getLikeCount().toString() + " " + "likes");
+        txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
         txtLikes.setFont(Font.font("Helvetica", 14));
         txtLikes.setTranslateY(-7);
         centerPane.getChildren().add(txtLikes);
@@ -372,6 +372,5 @@ public class frmHomePage {
         scrollPane.setContent(centerPane);
         borderPane.setCenter(scrollPane);
     }
-
 }
 

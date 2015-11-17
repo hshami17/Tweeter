@@ -10,7 +10,7 @@ import javafx.geometry.*;
 
 public class ConfirmBox {
 
-    public static boolean result = false;
+    public static boolean result;
 
     /**
      * Display an alert box
@@ -22,6 +22,8 @@ public class ConfirmBox {
     public static void display(String title, String message, int width, int length){
         // Create a new window
         Stage window = new Stage();
+
+        result = false;
 
         // Disallow inputs to parent window
         window.initModality(Modality.APPLICATION_MODAL);
