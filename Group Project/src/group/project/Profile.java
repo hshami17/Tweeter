@@ -33,6 +33,7 @@ public class Profile {
         if (content.contains("@") && content.length() > 1) {
             int i = content.indexOf("@") + 1;
             boolean done = false;
+            // Extract the username tagged from the post
             while (!done) {
                 if (i + 1 > content.length())
                     done = true;
@@ -44,92 +45,11 @@ public class Profile {
                         i++;
                 }
             }
-            // Check if user exists
+            // Update TaggedPost.txt
             String taggedUser = content.substring(content.indexOf("@") + 1, i).trim();
-            if (UserRepository.search(taggedUser) != -1) {
-                try {
-                    Scanner file = new Scanner(new File("TaggedPost.txt"));
-                    PrintWriter writer = new PrintWriter("temp.txt");
-
-                    String nxtItem = "";
-                    boolean foundUser = false;
-
-                    while (!foundUser && file.hasNext()) {
-                        nxtItem = file.next();
-
-                        if (!nxtItem.equals(taggedUser)) {
-                            // Print the item
-                            writer.println(nxtItem);
-                        } else {
-                            // Print the user name and new liked ID
-                            foundUser = true;
-                            writer.println(nxtItem);
-                            writer.println(PostRepository.currentID.toString());
-                        }
-                    }
-                    // Print the rest of the file
-                    while (file.hasNext()) {
-                        writer.println(file.next());
-                    }
-                    writer.close();
-
-                    //Source file, from which content will be copied
-                    File sourceFile = new File("temp.txt");
-
-                    // destination file, where the content to be pasted
-                    File destFile = new File("TaggedPost.txt");
-
-                    //if file not exist then create one
-                    if (!destFile.exists()) {
-                        try {
-                            destFile.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    InputStream input = null;
-                    OutputStream output = null;
-
-                    try {
-                        // FileInputStream to read streams
-                        input = new FileInputStream(sourceFile);
-
-                        // FileOutputStream to write streams
-                        output = new FileOutputStream(destFile);
-
-                        byte[] buf = new byte[1024];
-                        int bytesRead;
-
-                        while ((bytesRead = input.read(buf)) > 0) {
-                            output.write(buf, 0, bytesRead);
-                        }
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (null != input) {
-                                input.close();
-                                sourceFile.delete();
-                            }
-
-                            if (null != output) {
-                                output.close();
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
+            FileUpdater.updateTaggedPostFile(content, taggedUser);
         }
-    } // END NEW POST
+    }
 
     private static void addPost(String ID, String username, String content, boolean isPublic, int likeCount){
         userPosts.add(new Post(PostRepository.currentID.toString(),
@@ -138,189 +58,16 @@ public class Profile {
 
     public static void addLikedPost(Post liked) {
         likedPosts.add(liked);
-        try {
-            Scanner file = new Scanner(new File("UserLikes.txt"));
-            PrintWriter writer = new PrintWriter("temp.txt");
-
-            String nxtItem = "";
-            boolean foundUser = false;
-
-            while (!foundUser && file.hasNext()) {
-                nxtItem = file.next();
-
-                if (!nxtItem.equals(username)) {
-                    // Print the item
-                    writer.println(nxtItem);
-                } else {
-                    // Print the user name and new liked ID
-                    foundUser = true;
-                    writer.println(nxtItem);
-                    writer.println(liked.getMsg_ID());
-                }
-            }
-
-            while (file.hasNext()) {
-                writer.println(file.next());
-            }
-            writer.close();
-
-            //Source file, from which content will be copied
-            File sourceFile = new File("temp.txt");
-
-            // destination file, where the content to be pasted
-            File destFile = new File("UserLikes.txt");
-
-            //if file not exist then create one
-            if (!destFile.exists()) {
-                try {
-                    destFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            InputStream input = null;
-            OutputStream output = null;
-
-            try {
-                // FileInputStream to read streams
-                input = new FileInputStream(sourceFile);
-
-                // FileOutputStream to write streams
-                output = new FileOutputStream(destFile);
-
-                byte[] buf = new byte[1024];
-                int bytesRead;
-
-                while ((bytesRead = input.read(buf)) > 0) {
-                    output.write(buf, 0, bytesRead);
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (null != input) {
-                        input.close();
-                        sourceFile.delete();
-                    }
-
-                    if (null != output) {
-                        output.close();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
+        FileUpdater.addToUserLikesFile(username, liked.getMsg_ID());
     }
 
     public static void addTaggedPost(Post tagged){
         taggedPosts.add(tagged);
     }
 
-    public static void removeLikedPost(String ID) throws IOException{
+    public static void removeLikedPost(String ID){
         likedPosts.remove(searchLikedPosts(ID));
-
-        Scanner file = new Scanner(new File("UserLikes.txt"));
-        boolean foundPost = false;
-
-        PrintWriter writer = new PrintWriter("temp.txt");
-
-        String nxtItem = "";
-
-        boolean foundUser = false;
-
-        while(!foundUser && file.hasNext()){
-            nxtItem = file.next();
-
-            if(!nxtItem.equals(username)){
-                writer.println(nxtItem);
-            }
-            else{
-                writer.println(nxtItem);
-                foundUser = true;
-            }
-        }
-
-        while (!foundPost && file.hasNext()){
-            nxtItem = file.next();
-
-            if (nxtItem.equals(ID)){
-                foundPost = true;
-            }
-            else{
-                writer.println(nxtItem);
-            }
-
-        }
-        while (file.hasNext()){
-            writer.println(file.next());
-        }
-        writer.close();
-
-
-        //Source file, from which content will be copied
-        File sourceFile = new File("temp.txt");
-
-        // destination file, where the content to be pasted
-        File destFile = new File("UserLikes.txt");
-
-        //if file not exist then create one
-        if (!destFile.exists()) {
-            try {
-                destFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        InputStream input = null;
-        OutputStream output = null;
-
-        try {
-
-            // FileInputStream to read streams
-            input = new FileInputStream(sourceFile);
-
-            // FileOutputStream to write streams
-            output = new FileOutputStream(destFile);
-
-            byte[] buf = new byte[1024];
-            int bytesRead;
-
-            while ((bytesRead = input.read(buf)) > 0) {
-                output.write(buf, 0, bytesRead);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-
-                if (null != input) {
-                    input.close();
-                    sourceFile.delete();
-                }
-
-                if (null != output) {
-                    output.close();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
+        FileUpdater.removeFromUserLikesFile(username, ID);
     }
 
     public static void retrieveLikes(){
@@ -377,12 +124,10 @@ public class Profile {
                     // Check if it equals to the current user username
                     if (nxtLine.equals(username)) {
                         found = true;
-                       // System.out.println("\n" + "Current user is: " + nxtLine);
                         // Read the first tagged post ID
                         nxtLine = file.next();
                         // Keep reading all liked post IDs until END line is read
                         while (!nxtLine.equals("END")) {
-                           // System.out.println("Looking for this ID: " + nxtLine);
                             // Search and get the liked post from ID read and add to users liked posts
                             if (PostRepository.search(nxtLine) != -1) {
                                 Post taggedPost = PostRepository.getPost(PostRepository.search(nxtLine));
@@ -406,7 +151,7 @@ public class Profile {
 
     public static int taggedPostSize() {return taggedPosts.size();}
 
-    public static Post getTaggedPost(int index){return taggedPosts.get(index);}
+    public static Post getTaggedPost(int index) {return taggedPosts.get(index);}
 
     public static boolean getLikedPost(String ID){
         if (searchLikedPosts(ID) != -1)

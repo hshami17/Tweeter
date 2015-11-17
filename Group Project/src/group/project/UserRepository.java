@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class UserRepository {
     private static ArrayList<User> userRepo;
 
-    UserRepository(){
+    public static void populateUserRepository(){
         try {
             userRepo = new ArrayList<>();
             Scanner file = new Scanner(new File("UserInfo.txt"));

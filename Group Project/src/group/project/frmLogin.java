@@ -27,9 +27,9 @@ public class frmLogin extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Create the user repository
-        UserRepository userRepository = new UserRepository();
+        UserRepository.populateUserRepository();
         // Create the post repository
-        PostRepository postRepository = new PostRepository();
+        PostRepository.populatePostRepository();
         // Display the login form
         display();
     }
