@@ -17,7 +17,7 @@ public class frmRegister {
 
     private static TextField txtUsername;
     private static TextField txtPassword;
-    public static boolean success = false;
+    public static boolean success;
 
     /**
      * Display the "New Account" window
@@ -29,6 +29,8 @@ public class frmRegister {
         window.setResizable(false);
         // Disallow inputs to parent window
         window.initModality(Modality.APPLICATION_MODAL);
+
+        success = false;
 
         // Create a new grid pane layout
         GridPane grid = new GridPane();

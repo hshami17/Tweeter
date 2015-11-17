@@ -15,6 +15,9 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
+import javax.imageio.IIOException;
+import java.io.IOException;
+
 public class frmHomePage {
 
     private static Stage window;
@@ -224,7 +227,7 @@ public class frmHomePage {
      */
     public static void getAllPublicPosts(){
         rbPublic.setSelected(true);
-        centerPane = new VBox(6);
+        centerPane = new VBox(5);
         scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
         // Check to see if size is 0
@@ -332,12 +335,17 @@ public class frmHomePage {
                 btnFollowDelete.setTranslateX(68);
                 txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
             } else {
-                addPost.setLikeCount(addPost.getLikeCount() - 1);
-                Profile.removeLikedPost(addPost.getMsg_ID());
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Like");
-                btnFollowDelete.setTranslateX(55);
-                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
+                try {
+                    addPost.setLikeCount(addPost.getLikeCount() - 1);
+                    Profile.removeLikedPost(addPost.getMsg_ID());
+                    PostRepository.saveAllPosts();
+                    btnLikeUpdate.setText("Like");
+                    btnFollowDelete.setTranslateX(55);
+                    txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
+                }
+                catch (IOException ex){
+                    ex.printStackTrace();
+                }
             }
         });
         btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
