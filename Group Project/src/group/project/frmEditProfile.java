@@ -41,26 +41,30 @@ public class frmEditProfile {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        final TextField username = new TextField();
-        username.setPromptText("Enter your new username.");
-        GridPane.setConstraints(username, 0, 0);
-        grid.getChildren().add(username);
         
+        // Enter a new username
+        
+        TextField txtUsername = new TextField();
+        txtUsername.setPromptText("Enter your new username.");
+        GridPane.setConstraints(txtUsername, 0, 0);
+        grid.getChildren().add(txtUsername);
+        
+        // Enter a new password
+        final TextField txtPassword = new TextField();
+        txtPassword.setPromptText("Enter your new password.");
+        GridPane.setConstraints(txtPassword, 0, 1);
+        grid.getChildren().add(txtPassword);
 
-        final TextField password = new TextField();
-        password.setPromptText("Enter your new password.");
-        GridPane.setConstraints(password, 0, 1);
-        grid.getChildren().add(password);
+        // Enter a new bio
+        final TextField txtBio = new TextField();
+        txtBio.setPromptText("Enter your new bio.");
+        GridPane.setConstraints(txtBio, 0, 2);
+        grid.getChildren().add(txtBio);
 
-        final TextField bio = new TextField();
-        bio.setPromptText("Enter your new bio.");
-        GridPane.setConstraints(bio, 0, 2);
-        grid.getChildren().add(bio);
-
-        // Create a cancel button to close the post window
+        // Create a cancel button to close the edit window
         Button btnCancel = new Button("Cancel");
         btnCancel.setOnAction(event -> {
-            if (!username.getText().trim().isEmpty()) {
+            if (!txtUsername.getText().trim().isEmpty()) {
                 ConfirmBox.display("Cancel Editing Profile", "Any changes to your profile will be lost, are you sure you want to close?",
                         300, 110);
                 if (ConfirmBox.result)
@@ -77,19 +81,33 @@ public class frmEditProfile {
         //Create a save button to save the profile changes
         Button btnSave = new Button("Save Changes");
         btnSave.setOnAction(event -> {
-            if (!username.getText().trim().isEmpty()) {
+              
+                if (!txtUsername.getText().trim().isEmpty()) {
+                System.out.println("Old username is " + UserRepository.getUser(Profile.username).getUsername());
+                String newUsername = txtUsername.getText();
+                UserRepository.getUser(Profile.username).setUsername(newUsername);
+                Profile.username = newUsername;
+                System.out.println("New username is " + UserRepository.getUser(Profile.username).getUsername());
+                }
                 
+               /** if(!txtPassword.getText().trim().isEmpty()){
+                String newPassword = txtPassword.getText();
+                UserRepository.getUser(Profile.username).setPassword(newPassword);
+                }
+                */
+                
+                if(!txtBio.getText().trim().isEmpty()){
+                String newBio = txtBio.getText();
+                UserRepository.getUser(Profile.username).setUserBio(newBio);
+                }
                 
                 ConfirmBox.display("Save Changes to Profile", "Any previous profile details will be overwritten, are you sure you want to continue?",
                         300, 110);
-                saveUsername();
-                savePassword();
-                saveBio();
+                
                 
                 if (ConfirmBox.result)
                     window.close();
-            } else
-                window.close();
+         
         });
         
         btnSave.setFont(Font.font("Helvetica", 15));
@@ -115,35 +133,10 @@ public class frmEditProfile {
         
     }
      
-      public static void saveUsername(){
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter("LoginInfo.txt"));
-            
-            out.close();
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-    }
-      public static void savePassword(){
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter("LoginInfo.txt"));
-            
-            out.close();
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-    }
-      public static void saveBio(){
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter("UserInfo.txt"));
-            
-            out.close();
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
-        }
-    }
+     // public static void saveUsername(){
+        //
+          
+    //}
+   
 }
 

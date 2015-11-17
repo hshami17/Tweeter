@@ -3,15 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/frmHomePage.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/Post.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/PostRepository.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/Profile.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/AlertBox.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/frmLogin.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/frmRegister.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/frmPost.java</file>
-            <file>file:/Users/hasan/Desktop/Fall%20Semester%202015/CPSC%20240/PROJECTS/Group%20Project/GroupProject-git/Group%20Project/src/group/project/UserRepository.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/Profile.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/frmHomePage.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/frmRegister.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/PostRepository.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/frmLogin.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/AlertBox.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/UserRepository.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/frmPost.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/ConfirmBox.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/frmEditProfile.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/User.java</file>
+            <file>file:/Users/abigailmayodell/NetBeansProjects/GroupProject-git/Group%20Project/src/group/project/Post.java</file>
         </group>
     </open-files>
 </project-private>
