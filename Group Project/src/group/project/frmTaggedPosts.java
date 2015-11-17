@@ -52,11 +52,13 @@ public class frmTaggedPosts {
         txtTitle.setTranslateY(5);
 
         // Create the close button to close the window
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Back to Home");
         btnClose.setOnAction(event -> {
             window.close();
             frmHomePage.getAllPublicPosts();
         });
+        btnClose.setTranslateX(-5);
+        btnClose.setTranslateY(-5);
         btnClose.setFont(Font.font("Helvetica", 15));
 
         // Populate center pane with all tagged posts for current user
@@ -69,7 +71,7 @@ public class frmTaggedPosts {
         borderPane.setBottom(bottomPane);
 
         // Create the scene and display the window
-        Scene scene = new Scene(borderPane, 450, 400);
+        Scene scene = new Scene(borderPane, 450, 450);
         window.setScene(scene);
         window.showAndWait();
     }
@@ -82,7 +84,7 @@ public class frmTaggedPosts {
         scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
         if (Profile.taggedPostSize() != 0) {
-            for (int i = Profile.taggedPostSize() - 1; i >= 0; i--) {
+            for (int i=0; i<Profile.taggedPostSize(); i++) {
                 Post taggedPost = Profile.getTaggedPost(i);
 
                 // Get the post author
@@ -151,17 +153,13 @@ public class frmTaggedPosts {
                 btnFollowDelete.setTranslateX(68);
                 txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
             } else {
-                try {
-                    taggedPost.setLikeCount(taggedPost.getLikeCount() - 1);
-                    Profile.removeLikedPost(taggedPost.getMsg_ID());
-                    PostRepository.saveAllPosts();
-                    btnLikeUpdate.setText("Like");
-                    btnFollowDelete.setTranslateX(55);
-                    txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
-                }
-                catch (IOException ex){
-                    ex.printStackTrace();
-                }
+                taggedPost.setLikeCount(taggedPost.getLikeCount() - 1);
+                Profile.removeLikedPost(taggedPost.getMsg_ID());
+                PostRepository.saveAllPosts();
+                btnLikeUpdate.setText("Like");
+                btnFollowDelete.setTranslateX(55);
+                txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
+
             }
         });
         btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
@@ -177,7 +175,7 @@ public class frmTaggedPosts {
         centerPane.getChildren().add(txtLikes);
 
         // Create line to divide posts
-        Line divider = new Line(0, 100, 435, 100);
+        Line divider = new Line(0, 100, 420, 100);
         divider.setTranslateY(-10);
         divider.setStroke(Color.LIGHTGRAY);
         centerPane.getChildren().add(divider);

@@ -335,17 +335,12 @@ public class frmHomePage {
                 btnFollowDelete.setTranslateX(68);
                 txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
             } else {
-                try {
-                    addPost.setLikeCount(addPost.getLikeCount() - 1);
-                    Profile.removeLikedPost(addPost.getMsg_ID());
-                    PostRepository.saveAllPosts();
-                    btnLikeUpdate.setText("Like");
-                    btnFollowDelete.setTranslateX(55);
-                    txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
-                }
-                catch (IOException ex){
-                    ex.printStackTrace();
-                }
+                addPost.setLikeCount(addPost.getLikeCount() - 1);
+                Profile.removeLikedPost(addPost.getMsg_ID());
+                PostRepository.saveAllPosts();
+                btnLikeUpdate.setText("Like");
+                btnFollowDelete.setTranslateX(55);
+                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
             }
         });
         btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());

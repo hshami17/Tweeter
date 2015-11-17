@@ -172,32 +172,20 @@ public class frmRegister {
                 }
                 else if (validAccount()) {
                     success = true;
-                    // Insert new login info into text file
-                    FileWriter file = new FileWriter("LoginInfo.txt", true);
-                    BufferedWriter out = new BufferedWriter(file);
-                    out.newLine();
-                    out.write(txtUsername.getText().trim() + " " +
-                            txtPassword.getText().trim());
-                    out.close();
-
-                    // Insert new user info into text file
-                    FileWriter file2 = new FileWriter("UserInfo.txt", true);
-                    out = new BufferedWriter(file2);
+                    // Set the gender string
                     String gender;
                     if (rbMale.isSelected())
                         gender = rbMale.getText();
                     else
                         gender = rbFemale.getText();
-                    out.newLine();
-                    out.write(txtUsername.getText().trim() + " " + gender +
-                            " " + txtAge.getText().trim() + " " + txtBio.getText());
-                    out.close();
-
                     // Add new user to the repository
                     String username = txtUsername.getText().trim();
                     String age = txtAge.getText().trim();
                     String bio = txtBio.getText();
-                    UserRepository.add(new User(username, gender, age, bio));
+                    User newUser = new User(username, gender, age, bio);
+                    UserRepository.add(newUser);
+                    // Add new user to the appropriate files
+                    FileUpdater.addNewUserToFiles(newUser, txtPassword.getText().trim());
                     // Close the window
                     window.close();
                 } else

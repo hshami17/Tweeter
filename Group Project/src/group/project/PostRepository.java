@@ -11,7 +11,7 @@ public class PostRepository {
     private static ArrayList<Post> postRepo;
     public static Integer currentID = 0;
 
-    PostRepository(){
+    public static void populatePostRepository(){
         try {
             postRepo = new ArrayList<>();
             Scanner file = new Scanner(new File("Post.txt"));
@@ -60,7 +60,7 @@ public class PostRepository {
         try {
             PrintWriter out = new PrintWriter(new FileWriter("Post.txt"));
             for (int i=0; i<postRepo.size(); i++){
-                out.println(postRepo.get(i).toString() + "\n");
+                out.println(postRepo.get(i).toString());
             }
             out.close();
         }
