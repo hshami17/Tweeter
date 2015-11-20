@@ -1,3 +1,5 @@
+package group.project;
+
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -82,7 +84,7 @@ public class frmHomePage {
 
         // Create a buddy list button to open a window containing your followers and following
         Button btnBuddyList = new Button("Buddy List");
-        btnBuddyList.setOnAction(event -> frmBuddyList.display());
+        //btnBuddyList.setOnAction(event -> frmBuddyList.display());
         btnBuddyList.defaultButtonProperty().bind(btnBuddyList.focusedProperty());
         btnBuddyList.setFont(Font.font("Helvetica", 15));
         btnBuddyList.setTranslateX(7);

@@ -1,3 +1,5 @@
+package group.project;
+
 import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.*;

@@ -1,3 +1,5 @@
+package group.project;
+
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
 import javafx.stage.*;

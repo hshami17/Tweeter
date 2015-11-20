@@ -1,3 +1,5 @@
+package group.project;
+
 import java.io.*;
 import java.util.Scanner;
 
