@@ -1,16 +1,10 @@
-package group.project;
-
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
-import javafx.geometry.*;
-
 import javafx.beans.value.ChangeListener;
-import java.io.*;
-import java.util.*;
 
 public class frmPost {
 
