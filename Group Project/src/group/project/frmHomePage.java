@@ -1,22 +1,15 @@
 package group.project;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
-
-import javax.imageio.IIOException;
-import java.io.IOException;
 
 public class frmHomePage {
 
@@ -24,8 +17,8 @@ public class frmHomePage {
     private static BorderPane borderPane;
     private static VBox centerPane;
     private static ScrollPane scrollPane;
-    private static RadioButton rbPublic;
-    private static RadioButton rbPrivate;
+    public static RadioButton rbPublic;
+    public static RadioButton rbPrivate;
 
     public static void display(){
         // Create new window
@@ -36,6 +29,7 @@ public class frmHomePage {
         // Disallow inputs to parent window
         window.initModality(Modality.APPLICATION_MODAL);
 
+        // Handle close event when x button pressed
         window.setOnCloseRequest(event -> {
             event.consume();
             closeWindow();
@@ -50,7 +44,7 @@ public class frmHomePage {
         topPane.setStyle("-fx-background-color: #BF9393");
         topPane.setPadding(new Insets(3, 3, 15, 0));
 
-
+        // Create the text area for logged in user info
         TextArea txtUserInfo = new TextArea();
         txtUserInfo.setText("@" + UserRepository.getUser(Profile.username).getUsername() + "\n\n" +
                 UserRepository.getUser(Profile.username).getGender() + "\n" +
@@ -81,34 +75,20 @@ public class frmHomePage {
         btnTaggedPosts.setTranslateX(7);
 
         // Create search by # button to search all posts for # phrases
-        Button btnSearchByHashtag = new Button("Search by #");
-        btnSearchByHashtag.setOnAction(event -> {
-
-
-        });
-        btnSearchByHashtag.defaultButtonProperty().bind(btnSearchByHashtag.focusedProperty());
-        btnSearchByHashtag.setFont(Font.font("Helvetica", 15));
-        btnSearchByHashtag.setTranslateX(7);
-        btnSearchByHashtag.setTranslateY(30);
+        Button btnSearchByHashTag = new Button("Search by #");
+        btnSearchByHashTag.setOnAction(event -> frmHashTagSearch.display());
+        btnSearchByHashTag.defaultButtonProperty().bind(btnSearchByHashTag.focusedProperty());
+        btnSearchByHashTag.setFont(Font.font("Helvetica", 15));
+        btnSearchByHashTag.setTranslateX(7);
+        btnSearchByHashTag.setTranslateY(30);
 
         // Create a buddy list button to open a window containing your followers and following
         Button btnBuddyList = new Button("Buddy List");
-        btnBuddyList.setOnAction(event -> frmBuddyList.display());
+        //btnBuddyList.setOnAction(event -> frmBuddyList.display());
         btnBuddyList.defaultButtonProperty().bind(btnBuddyList.focusedProperty());
         btnBuddyList.setFont(Font.font("Helvetica", 15));
         btnBuddyList.setTranslateX(7);
         btnBuddyList.setTranslateY(30);
-
-        // Get the logged in user's account info to display
-       // Text username = new Text("@" + UserRepository.getUser(Profile.username).getUsername());
-       // username.setFont(Font.font("Helvetica", 15));
-        //Text gender = new Text(UserRepository.getUser(Profile.username).getGender());
-       // gender.setFont(Font.font("Helvetica", 15));
-       // Text age = new Text(UserRepository.getUser(Profile.username).getAge());
-       // age.setFont(Font.font("Helvetica", 15));
-       // Text bio = new Text(UserRepository.getUser(Profile.username).getUserBio().trim());
-       // bio.setFont(Font.font("Helvetica", 15));
-        //bio.setWrappingWidth(70);
 
         // Create post button to open new post window
         Button btnPost = new Button("New Post");
@@ -194,7 +174,7 @@ public class frmHomePage {
         topPane.setAlignment(Pos.TOP_RIGHT);
 
         // Add user info to the left pane
-        leftPane.getChildren().addAll(txtUserInfo, btnEditProfile, btnTaggedPosts, btnSearchByHashtag, btnBuddyList);
+        leftPane.getChildren().addAll(txtUserInfo, btnEditProfile, btnTaggedPosts, btnSearchByHashTag, btnBuddyList);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         // Set the left and top pane
@@ -245,9 +225,15 @@ public class frmHomePage {
                     txtPost.setWrappingWidth(400);
 
                     centerPane.getChildren().addAll(txtAuthor, txtPost);
-                    addPostComponents(addPost);
+                    addPost.addPostComponents(addPost, centerPane, scrollPane, borderPane, "Home");
                 }
             }
+            if (centerPane.getChildren().isEmpty()) {
+                borderPane.setCenter(new VBox(0));
+            }
+        }
+        else{
+            borderPane.setCenter(centerPane);
         }
     }
 
@@ -275,105 +261,13 @@ public class frmHomePage {
                     // Add items to the center pane
                     centerPane.getChildren().addAll(txtAuthor, txtPost);
                     // Add post interaction buttons
-                    addPostComponents(addPost);
+                    addPost.addPostComponents(addPost, centerPane, scrollPane, borderPane, "Home");
                 }
             }
-        }
-    }
-
-    private static void addPostComponents(Post addPost){
-        // Create text to display likes
-        Text txtLikes = new Text();
-
-        // Set initial state of like update button
-        Button btnLikeUpdate = new Button();
-        if (Profile.getLikedPost(addPost.getMsg_ID()))
-            btnLikeUpdate.setText("Unlike");
-        else
-            btnLikeUpdate.setText("Like");
-
-        // Create button to display follow or delete
-        Button btnFollowDelete = new Button();
-        // Set initial state of follow/delete button
-        if (addPost.getAuthor().trim().equals(Profile.username))
-            btnFollowDelete.setText("Delete");
-        else
-            btnFollowDelete.setText("Follow");
-        // Set the X position of the follow/delete button
-        if (btnLikeUpdate.getText().equals("Like"))
-            btnFollowDelete.setTranslateX(55);
-        else
-            btnFollowDelete.setTranslateX(68);
-
-
-        // Execute appropriate action depending on button state
-        btnFollowDelete.setOnAction(event -> {
-            if (btnFollowDelete.getText().equals("Delete")) {
-                ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
-                if (ConfirmBox.result) {
-                    PostRepository.deletePost(addPost);
-                    PostRepository.saveAllPosts();
-                    if (rbPublic.isSelected())
-                        getAllPublicPosts();
-                    else
-                        getAllPrivatePosts();
-                }
+            if (centerPane.getChildren().isEmpty()) {
+                borderPane.setCenter(new VBox(0));
             }
-        });
-        btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());
-        btnFollowDelete.setFont(Font.font("Helvetica", 15));
-        btnFollowDelete.setTranslateY(-15);
-
-
-        // Execute appropriate action depending on state of update like button
-        btnLikeUpdate.setOnAction(event -> {
-            if (btnLikeUpdate.getText().equals("Like")) {
-                addPost.setLikeCount(addPost.getLikeCount() + 1);
-                Profile.addLikedPost(addPost);
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Unlike");
-                btnFollowDelete.setTranslateX(68);
-                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
-            } else {
-                addPost.setLikeCount(addPost.getLikeCount() - 1);
-                Profile.removeLikedPost(addPost.getMsg_ID());
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Like");
-                btnFollowDelete.setTranslateX(55);
-                txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
-            }
-        });
-        btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
-        btnLikeUpdate.setFont(Font.font("Helvetica", 15));
-        btnLikeUpdate.setTranslateY(20);
-
-        centerPane.getChildren().addAll(btnLikeUpdate, btnFollowDelete);
-
-        // Disable post interaction buttons if in explore mode
-        if (frmLogin.exploreMode){
-            btnLikeUpdate.setDisable(true);
-            btnFollowDelete.setDisable(true);
         }
-
-        // Show likes for a post
-        txtLikes.setText(addPost.getLikeCount().toString() + " " + "likes");
-        txtLikes.setFont(Font.font("Helvetica", 14));
-        txtLikes.setTranslateY(-7);
-        centerPane.getChildren().add(txtLikes);
-
-        // Create line to divide posts
-        Line divider = new Line(0, 100, 435, 100);
-        divider.setTranslateY(-10);
-        divider.setStroke(Color.LIGHTGRAY);
-        centerPane.getChildren().add(divider);
-
-        // Set center pane alignment and color
-        centerPane.setAlignment(Pos.TOP_LEFT);
-        centerPane.setStyle("-fx-background-color: #EFF2FB");
-        // Put the VBox onto the scroll pane and add to the border pane
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.setContent(centerPane);
-        borderPane.setCenter(scrollPane);
     }
 }
 

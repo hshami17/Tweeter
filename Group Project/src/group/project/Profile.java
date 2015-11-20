@@ -3,9 +3,12 @@ package group.project;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Profile {
     public static String username;
+    public static String password;
     private static ArrayList<Post> userPosts = new ArrayList<>();
     private static ArrayList<Post> likedPosts = new ArrayList<>();
     private static ArrayList<Post> taggedPosts = new ArrayList<>();
@@ -29,6 +32,7 @@ public class Profile {
         // Add post to current users repository
         addPost(PostRepository.currentID.toString(), username, content, isPublic, 0);
 
+
         // Check if the message contained an @ tag
         if (content.contains("@") && content.length() > 1) {
             int i = content.indexOf("@") + 1;
@@ -45,8 +49,18 @@ public class Profile {
                         i++;
                 }
             }
-            // Update TaggedPost.txt
             String taggedUser = content.substring(content.indexOf("@") + 1, i).trim();
+            if (taggedUser.length() == 0){
+                return;
+            }
+            // Check for special characters at the end of the tagged user
+            String endChar = taggedUser.substring(taggedUser.length() - 1);
+            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(endChar);
+            if (m.find()){
+                taggedUser = taggedUser.replaceAll("[^a-z0-9 ]", "");
+            }
+            // Update TaggedPost.txt
             FileUpdater.updateTaggedPostFile(content, taggedUser);
         }
     }

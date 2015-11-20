@@ -2,10 +2,7 @@ package group.project;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -79,7 +76,7 @@ public class frmTaggedPosts {
     /**
      * Get all the posts the currently logged in user was tagged in.
      */
-    private static void getAllTaggedPosts() {
+    public static void getAllTaggedPosts() {
         centerPane = new VBox(6);
         scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
@@ -97,96 +94,9 @@ public class frmTaggedPosts {
                 txtPost.setWrappingWidth(400);
 
                 centerPane.getChildren().addAll(txtAuthor, txtPost);
-                addPostComponents(taggedPost);
+                taggedPost.addPostComponents(taggedPost, centerPane, scrollPane, borderPane, "Tagged Posts");
             }
         }
-    }
-
-    private static void addPostComponents(Post taggedPost){
-        // Create text to display likes
-        Text txtLikes = new Text();
-
-        // Set initial state of like update button
-        Button btnLikeUpdate = new Button();
-        if (Profile.getLikedPost(taggedPost.getMsg_ID()))
-            btnLikeUpdate.setText("Unlike");
-        else
-            btnLikeUpdate.setText("Like");
-
-        // Create button to display follow or delete
-        Button btnFollowDelete = new Button();
-        // Set initial state of follow/delete button
-        if (taggedPost.getAuthor().trim().equals(Profile.username))
-            btnFollowDelete.setText("Delete");
-        else
-            btnFollowDelete.setText("Follow");
-        // Set the X position of the follow/delete button
-        if (btnLikeUpdate.getText().equals("Like"))
-            btnFollowDelete.setTranslateX(55);
-        else
-            btnFollowDelete.setTranslateX(68);
-
-
-        // Execute appropriate action depending on button state
-        btnFollowDelete.setOnAction(event -> {
-            if (btnFollowDelete.getText().equals("Delete")) {
-                ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
-                if (ConfirmBox.result) {
-                    PostRepository.deletePost(taggedPost);
-                    PostRepository.saveAllPosts();
-                    getAllTaggedPosts();
-                }
-            }
-        });
-        btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());
-        btnFollowDelete.setFont(Font.font("Helvetica", 15));
-        btnFollowDelete.setTranslateY(-15);
-
-
-        // Execute appropriate action depending on state of update like button
-        btnLikeUpdate.setOnAction(event -> {
-            if (btnLikeUpdate.getText().equals("Like")) {
-                taggedPost.setLikeCount(taggedPost.getLikeCount() + 1);
-                Profile.addLikedPost(taggedPost);
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Unlike");
-                btnFollowDelete.setTranslateX(68);
-                txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
-            } else {
-                taggedPost.setLikeCount(taggedPost.getLikeCount() - 1);
-                Profile.removeLikedPost(taggedPost.getMsg_ID());
-                PostRepository.saveAllPosts();
-                btnLikeUpdate.setText("Like");
-                btnFollowDelete.setTranslateX(55);
-                txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
-
-            }
-        });
-        btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
-        btnLikeUpdate.setFont(Font.font("Helvetica", 15));
-        btnLikeUpdate.setTranslateY(20);
-
-        centerPane.getChildren().addAll(btnLikeUpdate, btnFollowDelete);
-
-        // Show likes for a post
-        txtLikes.setText(taggedPost.getLikeCount().toString() + " " + "likes");
-        txtLikes.setFont(Font.font("Helvetica", 14));
-        txtLikes.setTranslateY(-7);
-        centerPane.getChildren().add(txtLikes);
-
-        // Create line to divide posts
-        Line divider = new Line(0, 100, 420, 100);
-        divider.setTranslateY(-10);
-        divider.setStroke(Color.LIGHTGRAY);
-        centerPane.getChildren().add(divider);
-
-        // Set center pane alignment and color
-        centerPane.setAlignment(Pos.TOP_LEFT);
-        centerPane.setStyle("-fx-background-color: #EFF2FB");
-        // Put the VBox onto the scroll pane and add to the border pane
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.setContent(centerPane);
-        borderPane.setCenter(scrollPane);
     }
 }
 

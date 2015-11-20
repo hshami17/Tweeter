@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.geometry.*;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class frmRegister {
 
@@ -159,6 +161,9 @@ public class frmRegister {
         Button btnSignUp = new Button("Sign up");
         btnSignUp.setOnAction(event -> {
             try {
+                // Setup check for special characters
+                Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+                Matcher m = p.matcher(txtUsername.getText().trim());
                 if (txtUsername.getText().trim().isEmpty() ||
                         txtPassword.getText().trim().isEmpty() ||
                         (!rbMale.isSelected() && !rbFemale.isSelected()) ||
@@ -169,6 +174,9 @@ public class frmRegister {
                 }
                 else if (!txtAge.getText().matches("\\d+")){
                     AlertBox.display("Invalid", "Please enter a valid age", 220, 100);
+                }
+                else if (m.find()){
+                    AlertBox.display("Invalid", "Please make sure the username contains no special characters.", 280, 100);
                 }
                 else if (validAccount()) {
                     success = true;
@@ -188,7 +196,8 @@ public class frmRegister {
                     FileUpdater.addNewUserToFiles(newUser, txtPassword.getText().trim());
                     // Close the window
                     window.close();
-                } else
+                }
+                else
                     // Prompt user that the username already exists
                     AlertBox.display("Invalid", "This username is already taken!", 220, 100);
             } catch (IOException ex) {
@@ -205,7 +214,6 @@ public class frmRegister {
         btnCancel.setFont(Font.font("Helvetica", 14));
         btnCancel.defaultButtonProperty().bind(btnCancel.focusedProperty());
         GridPane.setConstraints(btnCancel, 2, 6);
-
 
         // Add controls to layout and setup the window scene
         grid.getChildren().addAll(lblTitle, lblUsername, lblPassword, lblBio, lblAge, txtUsername,

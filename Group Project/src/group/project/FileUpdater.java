@@ -71,6 +71,7 @@ public class FileUpdater {
                     try {
                         if (null != input) {
                             input.close();
+                            sourceFile.delete();
                         }
                         if (null != output)
                             output.close();
@@ -151,6 +152,7 @@ public class FileUpdater {
                 try {
                     if (null != input) {
                         input.close();
+                        sourceFile.delete();
                     }
                     if (null != output)
                         output.close();
@@ -237,6 +239,7 @@ public class FileUpdater {
                 try {
                     if (null != input) {
                         input.close();
+                        sourceFile.delete();
                     }
                     if (null != output) {
                         output.close();
@@ -294,7 +297,5 @@ public class FileUpdater {
         catch (IOException ex){
             ex.printStackTrace();
         }
-
-
     }
 }
