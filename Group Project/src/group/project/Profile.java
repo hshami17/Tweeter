@@ -12,7 +12,7 @@ public class Profile {
     private static ArrayList<Post> userPosts = new ArrayList<>();
     private static ArrayList<Post> likedPosts = new ArrayList<>();
     private static ArrayList<Post> taggedPosts = new ArrayList<>();
-    private static ArrayList<User> following = new ArrayList<>();
+    private static ArrayList<User> followings = new ArrayList<>();
     private static ArrayList<User> followers = new ArrayList<>();
 
     public static void clear(){
@@ -20,7 +20,7 @@ public class Profile {
         userPosts = new ArrayList<>();
         likedPosts = new ArrayList<>();
         taggedPosts = new ArrayList<>();
-        following = new ArrayList<>();
+        followings = new ArrayList<>();
         followers = new ArrayList<>();
     }
 
@@ -182,4 +182,113 @@ public class Profile {
         }
         return -1;
     }
+    
+    public static void addFollower(User follower){
+        followers.add(follower);
+        FileUpdater.addToFollowersFile(username, follower.getUsername());
+    }
+    
+    public static void addFollowing(User follow){
+        followings.add(follow);
+        FileUpdater.addToFollowingFile(username, follow.getUsername());
+    }
+    
+    public static void removeFollower(String follower){
+        //followers.remove(searchFollowerList(username));
+        FileUpdater.removeFromFollowersFile(username, follower);
+    }
+    
+    public static void removeFollowing(String following){
+        //followings.remove(searchFollowingList(username));
+        FileUpdater.removeFromFollowingFile(username, following);
+    }
+    
+    public static void retrieveFollowers(){
+        try {
+            if (UserRepository.getRepoSize() != 0) {
+                // Open the followers file
+                Scanner file = new Scanner(new File("Followers.txt"));
+                // Set flag for when current user is found
+                boolean found = false;
+                // Break loop if current user was found or end of file reached
+                while (!found && file.hasNext()) {
+                    // Get the next line
+                    String nxtLine = file.next();
+                    // Check if it equals to the current user username
+                    if (nxtLine.equals(username)) {
+                        found = true;
+                        // Read the first follower username
+                        nxtLine = file.next();
+                        // Keep reading all followers until END line is read
+                        while (!nxtLine.equals("END")) {
+                            // Search and get the liked post from ID read and add to users liked posts
+                            if (UserRepository.search(nxtLine) != -1) {
+                                User follower = UserRepository.getUser(nxtLine);
+                                followers.add(follower);
+                            }
+                            // Read the next line
+                            nxtLine = file.next();
+                        }
+
+                    } else {
+                        while (!nxtLine.equals("END")) {
+                            nxtLine = file.next();
+                        }
+                    }
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void retrieveFollowing(){
+        try {
+            if (PostRepository.getRepoSize() != 0) {
+                // Open the user likes file
+                Scanner file = new Scanner(new File("Following.txt"));
+                // Set flag for when current user is found
+                boolean found = false;
+                // Break loop if current user was found or end of file reached
+                while (!found && file.hasNext()) {
+                    // Get the next line
+                    String nxtLine = file.next();
+                    // Check if it equals to the current user username
+                    if (nxtLine.equals(username)) {
+                        found = true;
+                        // Read the first liked post ID
+                        nxtLine = file.next();
+                        // Keep reading all liked post IDs until END line is read
+                        while (!nxtLine.equals("END")) {
+                            // Search and get the liked post from ID read and add to users liked posts
+                            if (UserRepository.search(nxtLine) != -1) {
+                                User following = UserRepository.getUser(nxtLine);
+                                followings.add(following);
+                            }
+                            // Read the next line
+                            nxtLine = file.next();
+                        }
+
+                    } else {
+                        while (!nxtLine.equals("END")) {
+                            nxtLine = file.next();
+                        }
+                    }
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public static ArrayList<User> getFollowers(){
+        return followers;
+    }
+    
+    public static ArrayList<User> getFollowings(){
+        return followings;
+    }
+    
 }

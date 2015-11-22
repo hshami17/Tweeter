@@ -16,6 +16,7 @@ public class frmHashTagSearch {
 
     private static Stage window;
     private static String phrase;
+    private static double searchWindowX, searchWindowY;
     private static BorderPane borderPane;
     private static VBox centerPane;
     private static ScrollPane scrollPane;
@@ -44,13 +45,13 @@ public class frmHashTagSearch {
         // Create search button to look up the phrase
         Button btnSearch = new Button("Search");
         btnSearch.setOnAction(event -> {
-            phrase = txtSearch.getText().trim();
-            if (phrase.charAt(0) == '#'){
-                phrase = phrase.substring(1);
+            if (!txtSearch.getText().trim().isEmpty()) {
+                phrase = txtSearch.getText().trim();
+                if (phrase.charAt(0) == '#') {
+                    phrase = phrase.substring(1);
+                }
+                getHashTagPosts();
             }
-
-            getHashTagPosts();
-            displayPosts();
         });
         btnSearch.defaultButtonProperty().bind(btnSearch.focusedProperty());
         btnSearch.setFont(Font.font("Helvetica", 18));
@@ -77,6 +78,13 @@ public class frmHashTagSearch {
 
         // Set the scene and display window
         window.setScene(scene1);
+
+        // Get the x and y position of the search window
+        window.show();
+        searchWindowX = window.getX();
+        searchWindowY = window.getY();
+        window.close();
+
         window.showAndWait();
     }
 
@@ -86,9 +94,8 @@ public class frmHashTagSearch {
         scrollPane = new ScrollPane();
 
         for (int i = PostRepository.getRepoSize() - 1; i >= 0; i--) {
-            if (PostRepository.containsHashTagPhrase(phrase, i)){
-                Post post = PostRepository.getPost(i);
-
+            Post post = PostRepository.getPost(i);
+            if (post.containsHashTagPhrase(phrase)){
                 // Get the post author
                 Text txtAuthor = new Text("@" + post.getAuthor().trim());
                 txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
@@ -99,9 +106,10 @@ public class frmHashTagSearch {
                 txtPost.setWrappingWidth(400);
 
                 centerPane.getChildren().addAll(txtAuthor, txtPost);
-                post.addPostComponents(post, centerPane, scrollPane, borderPane, "HashTag Posts");
+                post.addPostComponents(centerPane, scrollPane, borderPane, "HashTag Posts");
             }
         }
+        displayPosts();
     }
 
     private static void displayPosts(){
@@ -123,13 +131,15 @@ public class frmHashTagSearch {
         txtTitle.setTranslateY(5);
 
         // Create the close button to close the window
-        Button btnClose = new Button("Back to Home");
+        Button btnClose = new Button("Back");
         btnClose.setOnAction(event -> {
-            window.close();
             if (frmHomePage.rbPublic.isSelected())
                 frmHomePage.getAllPublicPosts();
             else
                 frmHomePage.getAllPrivatePosts();
+            window.setScene(scene1);
+            window.setX(searchWindowX);
+            window.setY(searchWindowY);
         });
         btnClose.setTranslateX(-5);
         btnClose.setTranslateY(-5);

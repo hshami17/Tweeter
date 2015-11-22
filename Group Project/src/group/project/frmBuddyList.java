@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class frmBuddyList {
     
-    /**
+
     private static BorderPane border;
     private static RadioButton rbFollowers;
     private static RadioButton rbFollowing;
@@ -65,7 +65,7 @@ public class frmBuddyList {
         rbFollowers.setTranslateY(5);
 
         rbFollowing = new RadioButton("Following");
-        rbFollowing.setOnAction(event -> getFollowings());
+        rbFollowing.setOnAction(event -> getFollowing());
         rbFollowing.setToggleGroup(group);
         rbFollowing.setFont(Font.font("Helvetica", FontWeight.BOLD, 13));
         rbFollowing.setTranslateX(10);
@@ -123,10 +123,10 @@ public class frmBuddyList {
         scroll = new ScrollPane();
         center.setPadding(new Insets(5, 5, 5, 5));
         if(UserRepository.getRepoSize() != 0){
-            User[] f = Profile.getFollowings().toArray();
-            for(int i = 0; i < g.length(); i++){
+            ArrayList<User> f = Profile.getFollowings();
+            for(int i = 0; i < f.size(); i++){
                 //if(!addFollowing.isFollower()){
-                    Text person = new Text(f[i].getUsername().trim());
+                    Text person = new Text(f.get(i).getUsername().trim());
                     person.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
                     // Add items to center pane
                     center.getChildren().addAll(person);
@@ -136,7 +136,8 @@ public class frmBuddyList {
             }
         }
     }
-    
+
+    /**
     private static void addBuddyComponents(){
         //Set initial state of follow button
         Button btnFollow = new Button();
@@ -156,10 +157,10 @@ public class frmBuddyList {
                 if(ConfirmBox.result){
                     
                 }
-                if(rbFollowers.isSelected()){
+                else if(rbFollowers.isSelected()){
                     
                 }
-                else(rbFollowing.isSelected()){
+                else if(rbFollowing.isSelected()){
                 
                 }
             }
@@ -193,5 +194,4 @@ public class frmBuddyList {
     
     }
      */
-    
 }

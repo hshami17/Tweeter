@@ -298,4 +298,335 @@ public class FileUpdater {
             ex.printStackTrace();
         }
     }
+    
+    public static void addToFollowersFile(String username, String follower){
+        try {
+            Scanner file = new Scanner(new File("Followers.txt"));
+            PrintWriter writer = new PrintWriter("temp2.txt");
+
+            String nxtItem;
+            boolean foundUser = false;
+
+            while (!foundUser && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (!nxtItem.equals(username))
+                    // Print the item
+                    writer.println(nxtItem);
+                else {
+                    // Print the user name and new follower's username
+                    foundUser = true;
+                    writer.println(nxtItem);
+                    writer.println(follower);
+                }
+            }
+
+            while (file.hasNext())
+                writer.println(file.next());
+
+            writer.close();
+
+            //Source file, from which content will be copied
+            File sourceFile = new File("temp2.txt");
+
+            // destination file, where the content to be pasted
+            File destFile = new File("Followers.txt");
+
+            //if file does not exist then create one
+            if (!destFile.exists()) {
+                try {
+                    destFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                // FileInputStream to read streams
+                input = new FileInputStream(sourceFile);
+
+                // FileOutputStream to write streams
+                output = new FileOutputStream(destFile);
+
+                byte[] buf = new byte[1024];
+                int bytesRead;
+
+                while ((bytesRead = input.read(buf)) > 0)
+                    output.write(buf, 0, bytesRead);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    if (null != input) {
+                        input.close();
+                    }
+                    if (null != output)
+                        output.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void addToFollowingFile(String username, String following){
+        try {
+            Scanner file = new Scanner(new File("Following.txt"));
+            PrintWriter writer = new PrintWriter("temp2.txt");
+
+            String nxtItem;
+            boolean foundUser = false;
+
+            while (!foundUser && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (!nxtItem.equals(username))
+                    // Print the item
+                    writer.println(nxtItem);
+                else {
+                    // Print the user name and new liked ID
+                    foundUser = true;
+                    writer.println(nxtItem);
+                    writer.println(following);
+                }
+            }
+
+            while (file.hasNext())
+                writer.println(file.next());
+
+            writer.close();
+
+            //Source file, from which content will be copied
+            File sourceFile = new File("temp2.txt");
+
+            // destination file, where the content to be pasted
+            File destFile = new File("Following.txt");
+
+            //if file not exist then create one
+            if (!destFile.exists()) {
+                try {
+                    destFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                // FileInputStream to read streams
+                input = new FileInputStream(sourceFile);
+
+                // FileOutputStream to write streams
+                output = new FileOutputStream(destFile);
+
+                byte[] buf = new byte[1024];
+                int bytesRead;
+
+                while ((bytesRead = input.read(buf)) > 0)
+                    output.write(buf, 0, bytesRead);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    if (null != input) {
+                        input.close();
+                    }
+                    if (null != output)
+                        output.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void removeFromFollowersFile(String username, String follower) {
+        try {
+            Scanner file = new Scanner(new File("Followers.txt"));
+            boolean foundPost = false;
+
+            PrintWriter writer = new PrintWriter("temp2.txt");
+
+            String nxtItem;
+
+            boolean foundUser = false;
+
+            while (!foundUser && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (!nxtItem.equals(username))
+                    writer.println(nxtItem);
+                else {
+                    writer.println(nxtItem);
+                    foundUser = true;
+                }
+            }
+
+            while (!foundPost && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (nxtItem.equals(follower))
+                    foundPost = true;
+                else
+                    writer.println(nxtItem);
+            }
+            while (file.hasNext())
+                writer.println(file.next());
+
+            writer.close();
+
+
+            //Source file, from which content will be copied
+            File sourceFile = new File("temp2.txt");
+
+            // destination file, where the content to be pasted
+            File destFile = new File("Followers.txt");
+
+            //if file not exist then create one
+            if (!destFile.exists()) {
+                try {
+                    destFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                // FileInputStream to read streams
+                input = new FileInputStream(sourceFile);
+
+                // FileOutputStream to write streams
+                output = new FileOutputStream(destFile);
+
+                byte[] buf = new byte[1024];
+                int bytesRead;
+
+                while ((bytesRead = input.read(buf)) > 0)
+                    output.write(buf, 0, bytesRead);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (null != input) {
+                        input.close();
+                    }
+                    if (null != output) {
+                        output.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void removeFromFollowingFile(String username, String following) {
+        try {
+            Scanner file = new Scanner(new File("Following.txt"));
+            boolean foundPost = false;
+
+            PrintWriter writer = new PrintWriter("temp2.txt");
+
+            String nxtItem;
+
+            boolean foundUser = false;
+
+            while (!foundUser && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (!nxtItem.equals(username))
+                    writer.println(nxtItem);
+                else {
+                    writer.println(nxtItem);
+                    foundUser = true;
+                }
+            }
+
+            while (!foundPost && file.hasNext()) {
+                nxtItem = file.next();
+
+                if (nxtItem.equals(following))
+                    foundPost = true;
+                else
+                    writer.println(nxtItem);
+            }
+            while (file.hasNext())
+                writer.println(file.next());
+
+            writer.close();
+
+
+            //Source file, from which content will be copied
+            File sourceFile = new File("temp2.txt");
+
+            // destination file, where the content to be pasted
+            File destFile = new File("Following.txt");
+
+            //if file not exist then create one
+            if (!destFile.exists()) {
+                try {
+                    destFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                // FileInputStream to read streams
+                input = new FileInputStream(sourceFile);
+
+                // FileOutputStream to write streams
+                output = new FileOutputStream(destFile);
+
+                byte[] buf = new byte[1024];
+                int bytesRead;
+
+                while ((bytesRead = input.read(buf)) > 0)
+                    output.write(buf, 0, bytesRead);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (null != input) {
+                        input.close();
+                    }
+                    if (null != output) {
+                        output.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
 }

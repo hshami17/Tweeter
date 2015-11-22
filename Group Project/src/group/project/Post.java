@@ -11,6 +11,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Post {
     private String Msg_ID;
     private String author;
@@ -67,14 +70,14 @@ public class Post {
         return likeCount;
     }
 
-    public void addPostComponents(Post post, VBox centerPane, ScrollPane scrollPane,
-                                          BorderPane borderPane, String form){
+    public void addPostComponents(VBox centerPane, ScrollPane scrollPane,
+                                  BorderPane borderPane, String form){
         // Create text to display likes
         Text txtLikes = new Text();
 
         // Set initial state of like update button
         Button btnLikeUpdate = new Button();
-        if (Profile.getLikedPost(post.getMsg_ID()))
+        if (Profile.getLikedPost(Msg_ID))
             btnLikeUpdate.setText("Unlike");
         else
             btnLikeUpdate.setText("Like");
@@ -82,15 +85,15 @@ public class Post {
         // Create button to display follow or delete
         Button btnFollowDelete = new Button();
         // Set initial state of follow/delete button
-        if (post.getAuthor().trim().equals(Profile.username))
+        if (author.trim().equals(Profile.username))
             btnFollowDelete.setText("Delete");
         else
             btnFollowDelete.setText("Follow");
         // Set the X position of the follow/delete button
         if (btnLikeUpdate.getText().equals("Like"))
-            btnFollowDelete.setTranslateX(55);
+            btnFollowDelete.setTranslateX(52);
         else
-            btnFollowDelete.setTranslateX(68);
+            btnFollowDelete.setTranslateX(65);
 
 
         // Execute appropriate action depending on button state
@@ -98,49 +101,56 @@ public class Post {
             if (btnFollowDelete.getText().equals("Delete")) {
                 ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
                 if (ConfirmBox.result) {
-                    PostRepository.deletePost(post);
+                    PostRepository.deletePost(this);
                     PostRepository.saveAllPosts();
                     if (form.equals("Home")) {
                         if (frmHomePage.rbPublic.isSelected())
                             frmHomePage.getAllPublicPosts();
                         else
                             frmHomePage.getAllPrivatePosts();
-                    }
-                    else if (form.equals("Tagged Posts")){
+                    } else if (form.equals("Tagged Posts")) {
                         frmTaggedPosts.getAllTaggedPosts();
-                    }
-                    else if (form.equals("HashTag Posts")){
+                    } else if (form.equals("HashTag Posts")) {
                         frmHashTagSearch.getHashTagPosts();
                     }
                 }
             }
         });
         btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());
-        btnFollowDelete.setFont(Font.font("Helvetica", 15));
-        btnFollowDelete.setTranslateY(-15);
+        btnFollowDelete.setFont(Font.font("Helvetica", 13));
+        if (form.equals("Home"))
+            btnFollowDelete.setTranslateY(-14);
+        else
+            btnFollowDelete.setTranslateY(-15);
 
 
         // Execute appropriate action depending on state of update like button
         btnLikeUpdate.setOnAction(event -> {
             if (btnLikeUpdate.getText().equals("Like")) {
-                post.setLikeCount(post.getLikeCount() + 1);
-                Profile.addLikedPost(post);
+                this.setLikeCount(likeCount + 1);
+                Profile.addLikedPost(this);
                 PostRepository.saveAllPosts();
                 btnLikeUpdate.setText("Unlike");
                 btnFollowDelete.setTranslateX(68);
-                txtLikes.setText(post.getLikeCount().toString() + " " + "likes");
+                if (likeCount == 1)
+                    txtLikes.setText(likeCount + " " + "like");
+                else
+                    txtLikes.setText(likeCount + " " + "likes");
             } else {
-                post.setLikeCount(post.getLikeCount() - 1);
-                Profile.removeLikedPost(post.getMsg_ID());
+                this.setLikeCount(likeCount - 1);
+                Profile.removeLikedPost(Msg_ID);
                 PostRepository.saveAllPosts();
                 btnLikeUpdate.setText("Like");
                 btnFollowDelete.setTranslateX(55);
-                txtLikes.setText(post.getLikeCount().toString() + " " + "likes");
+                if (likeCount == 1)
+                    txtLikes.setText(likeCount + " " + "like");
+                else
+                    txtLikes.setText(likeCount + " " + "likes");
             }
         });
         btnLikeUpdate.defaultButtonProperty().bind(btnLikeUpdate.focusedProperty());
-        btnLikeUpdate.setFont(Font.font("Helvetica", 15));
-        btnLikeUpdate.setTranslateY(20);
+        btnLikeUpdate.setFont(Font.font("Helvetica", 13 ));
+        btnLikeUpdate.setTranslateY(17);
 
         centerPane.getChildren().addAll(btnLikeUpdate, btnFollowDelete);
 
@@ -150,8 +160,11 @@ public class Post {
             btnFollowDelete.setDisable(true);
         }
 
-        // Show likes for a post
-        txtLikes.setText(post.getLikeCount().toString() + " " + "likes");
+        // Show likes for the post
+        if (likeCount == 1)
+            txtLikes.setText(likeCount + " " + "like");
+        else
+            txtLikes.setText(likeCount + " " + "likes");
         txtLikes.setFont(Font.font("Helvetica", 14));
         txtLikes.setTranslateY(-7);
         centerPane.getChildren().add(txtLikes);
@@ -160,8 +173,10 @@ public class Post {
         int lineWidth;
         if (form.equals("Home"))
             lineWidth = 435;
+        else if (form.equals("Tagged Posts"))
+            lineWidth = 421;
         else
-            lineWidth = 420;
+            lineWidth = 425;
 
         // Create line to divide posts
         Line divider = new Line(0, 100, lineWidth, 100);
@@ -176,6 +191,42 @@ public class Post {
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
         scrollPane.setContent(centerPane);
         borderPane.setCenter(scrollPane);
+    }
+
+    public boolean containsHashTagPhrase(String phrase) {
+        if (message.contains("#") && message.length() > 1) {
+            int i = message.indexOf("#") + 1;
+            boolean done = false;
+            // Extract the username tagged from the post
+            while (!done) {
+                if (i + 1 > message.length())
+                    done = true;
+                else {
+                    String letter = message.substring(i, i + 1);
+                    if (letter.equals(" "))
+                        done = true;
+                    else
+                        i++;
+                }
+            }
+            String phraseCompare = message.substring(message.indexOf("#") + 1, i).trim();
+            if (phraseCompare.length() == 0)
+                return false;
+            // Check for special characters at the end of the phrase
+            String endChar = phraseCompare.substring(phraseCompare.length() - 1);
+            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(endChar);
+            if (m.find()) {
+                phraseCompare = phraseCompare.replaceAll("[^a-z0-9 ]", "");
+            }
+            if (phrase.equals(phraseCompare)){
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
     }
 
     @Override
