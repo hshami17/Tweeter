@@ -3,6 +3,7 @@ package group.project;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 
@@ -52,7 +53,13 @@ public class UserRepository {
             return new User();
     }
 
+    public static User getUser(int index) {return userRepo.get(index);}
+
     public static int getRepoSize() {return userRepo.size();}
+
+    public static void sortUserRepoByUsername(){
+        Collections.sort(userRepo);
+    }
 
     public static void add(User newUser) {userRepo.add(newUser);}
 }

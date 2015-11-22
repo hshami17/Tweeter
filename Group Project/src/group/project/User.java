@@ -1,6 +1,6 @@
 package group.project;
 
-public class User {
+public class User implements Comparable<User> {
     private String username;
     private String gender;
     private String age;
@@ -47,4 +47,9 @@ public class User {
     public void setUserBio(String userBio) {this.userBio = userBio;}
 
     public String getUserBio() {return userBio;}
+
+    @Override
+    public int compareTo(User o) {
+        return username.compareTo(o.getUsername());
+    }
 }

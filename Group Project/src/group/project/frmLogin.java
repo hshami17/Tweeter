@@ -65,7 +65,7 @@ public class frmLogin extends Application {
 
         // Name text field
         txtUsername = new TextField();
-        //txtUsername.setText("hshami");
+        txtUsername.setText("hshami");
         txtUsername.setFont(Font.font("Helvetica", 18));
         GridPane.setConstraints(txtUsername, 1, 1);
         GridPane.setColumnSpan(txtUsername, 2);
@@ -89,7 +89,7 @@ public class frmLogin extends Application {
 
         // Password text field
         txtPassword = new PasswordField();
-       // txtPassword.setText("toilet");
+        txtPassword.setText("toilet");
         txtPassword.setFont(Font.font(18));
         GridPane.setConstraints(txtPassword, 1, 2);
         GridPane.setColumnSpan(txtPassword, 2);

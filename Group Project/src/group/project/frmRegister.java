@@ -176,7 +176,7 @@ public class frmRegister {
                     AlertBox.display("Invalid", "Please enter a valid age", 220, 100);
                 }
                 else if (m.find()){
-                    AlertBox.display("Invalid", "Please make sure the username contains no special characters.", 280, 100);
+                    AlertBox.display("Invalid", "Please make sure the username contains no special characters.", 320, 100);
                 }
                 else if (validAccount()) {
                     success = true;

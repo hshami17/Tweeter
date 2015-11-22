@@ -71,47 +71,7 @@ public class PostRepository {
         }
     }
 
-    public static boolean containsHashTagPhrase(String phrase, int index) {
-        String content = postRepo.get(index).getMessage();
+    public static Post getPost(int index) {return postRepo.get(index);}
 
-        if (content.contains("#") && content.length() > 1) {
-            int i = content.indexOf("#") + 1;
-            boolean done = false;
-            // Extract the username tagged from the post
-            while (!done) {
-                if (i + 1 > content.length())
-                    done = true;
-                else {
-                    String letter = content.substring(i, i + 1);
-                    if (letter.equals(" "))
-                        done = true;
-                    else
-                        i++;
-                }
-            }
-            String phraseCompare = content.substring(content.indexOf("#") + 1, i).trim();
-            if (phraseCompare.length() == 0)
-                return false;
-            // Check for special characters at the end of the phrase
-            String endChar = phraseCompare.substring(phraseCompare.length() - 1);
-            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-            Matcher m = p.matcher(endChar);
-            if (m.find()) {
-                phraseCompare = phraseCompare.replaceAll("[^a-z0-9 ]", "");
-            }
-            if (phrase.equals(phraseCompare)){
-                return true;
-            }
-            else
-                return false;
-        }
-        else
-            return false;
-    }
-
-    public static Post getPost(int index){
-        return postRepo.get(index);
-    }
-
-    public static int getRepoSize(){return postRepo.size();}
+    public static int getRepoSize() {return postRepo.size();}
 }

@@ -38,6 +38,7 @@ public class AlertBox {
 
         // Create new layout and center layout, add controls to layout
         VBox layout = new VBox(20);
+        layout.setPadding(new Insets(0, 5, 0, 5));
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(lblMessage, btnClose);
         Scene scene = new Scene(layout, width, length);

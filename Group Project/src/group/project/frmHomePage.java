@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.geometry.*;
 
 public class frmHomePage {
-
     private static Stage window;
     private static BorderPane borderPane;
     private static VBox centerPane;
@@ -61,7 +60,6 @@ public class frmHomePage {
         Button btnEditProfile = new Button("Edit Profile");
         btnEditProfile.setOnAction(event -> {
 
-
         });
         btnEditProfile.defaultButtonProperty().bind(btnEditProfile.focusedProperty());
         btnEditProfile.setFont(Font.font("Helvetica", 15));
@@ -82,9 +80,17 @@ public class frmHomePage {
         btnSearchByHashTag.setTranslateX(7);
         btnSearchByHashTag.setTranslateY(30);
 
+        // Create find friends button to find other users
+        Button btnFindBuddy = new Button("Find Buddies");
+        btnFindBuddy.setOnAction(event -> frmFindBuddies.display());
+        btnFindBuddy.defaultButtonProperty().bind(btnFindBuddy.focusedProperty());
+        btnFindBuddy.setFont(Font.font("Helvetica", 15));
+        btnFindBuddy.setTranslateX(7);
+        btnFindBuddy.setTranslateY(30);
+
         // Create a buddy list button to open a window containing your followers and following
         Button btnBuddyList = new Button("Buddy List");
-        //btnBuddyList.setOnAction(event -> frmBuddyList.display());
+        btnBuddyList.setOnAction(event -> frmBuddyList.display());
         btnBuddyList.defaultButtonProperty().bind(btnBuddyList.focusedProperty());
         btnBuddyList.setFont(Font.font("Helvetica", 15));
         btnBuddyList.setTranslateX(7);
@@ -147,7 +153,7 @@ public class frmHomePage {
              Button btnRegister = new Button("Sign up");
              btnRegister.setOnAction(event -> {
                  frmRegister.display();
-                 if (frmRegister.success){
+                 if (frmRegister.success) {
                      window.close();
                      frmLogin.display();
                  }
@@ -174,7 +180,8 @@ public class frmHomePage {
         topPane.setAlignment(Pos.TOP_RIGHT);
 
         // Add user info to the left pane
-        leftPane.getChildren().addAll(txtUserInfo, btnEditProfile, btnTaggedPosts, btnSearchByHashTag, btnBuddyList);
+        leftPane.getChildren().addAll(txtUserInfo, btnEditProfile, btnTaggedPosts,
+                btnSearchByHashTag, btnFindBuddy, btnBuddyList);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         // Set the left and top pane
@@ -225,7 +232,7 @@ public class frmHomePage {
                     txtPost.setWrappingWidth(400);
 
                     centerPane.getChildren().addAll(txtAuthor, txtPost);
-                    addPost.addPostComponents(addPost, centerPane, scrollPane, borderPane, "Home");
+                    addPost.addPostComponents(centerPane, scrollPane, borderPane, "Home");
                 }
             }
             if (centerPane.getChildren().isEmpty()) {
@@ -261,7 +268,7 @@ public class frmHomePage {
                     // Add items to the center pane
                     centerPane.getChildren().addAll(txtAuthor, txtPost);
                     // Add post interaction buttons
-                    addPost.addPostComponents(addPost, centerPane, scrollPane, borderPane, "Home");
+                    addPost.addPostComponents(centerPane, scrollPane, borderPane, "Home");
                 }
             }
             if (centerPane.getChildren().isEmpty()) {
