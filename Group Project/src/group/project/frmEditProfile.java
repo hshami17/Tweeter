@@ -60,11 +60,21 @@ public class frmEditProfile {
         txtBio.setPromptText("Enter your new bio.");
         GridPane.setConstraints(txtBio, 0, 2);
         grid.getChildren().add(txtBio);
+        
+        final TextField txtGender = new TextField();
+        txtGender.setPromptText("Enter your gender.");
+        GridPane.setConstraints(txtGender, 0, 3);
+        grid.getChildren().add(txtGender);
+        
+        final TextField txtAge = new TextField();
+        txtAge.setPromptText("Enter your new age.");
+        GridPane.setConstraints(txtAge, 0, 4);
+        grid.getChildren().add(txtAge);
 
         // Create a cancel button to close the edit window
         Button btnCancel = new Button("Cancel");
         btnCancel.setOnAction(event -> {
-            if (!txtUsername.getText().trim().isEmpty()) {
+            if (!txtUsername.getText().trim().isEmpty()&&!!txtBio.getText().trim().isEmpty()&&!txtGender.getText().trim().isEmpty()&&!txtAge.getText().trim().isEmpty()) {
                 ConfirmBox.display("Cancel Editing Profile", "Any changes to your profile will be lost, are you sure you want to close?",
                         300, 110);
                 if (ConfirmBox.result)
@@ -98,8 +108,22 @@ public class frmEditProfile {
                 
                 if(!txtBio.getText().trim().isEmpty()){
                 String newBio = txtBio.getText();
-                UserRepository.getUser(Profile.username).setUserBio(newBio);
+                UserRepository.getUser(Profile.username).setUserBio(newBio);    
+                System.out.println("New bio is " + UserRepository.getUser(Profile.username).getUserBio());
                 }
+                
+                if (!txtGender.getText().trim().isEmpty()) {
+                String newGender = txtGender.getText();
+                UserRepository.getUser(Profile.username).setGender(newGender);
+                System.out.println("New gender is " + UserRepository.getUser(Profile.username).getGender());
+                }
+                
+                if (!txtAge.getText().trim().isEmpty()) {
+                String newAge = txtAge.getText();
+                UserRepository.getUser(Profile.username).setAge(newAge);
+                System.out.println("New age is " + UserRepository.getUser(Profile.username).getAge());
+                }
+                
                 
                 ConfirmBox.display("Save Changes to Profile", "Any previous profile details will be overwritten, are you sure you want to continue?",
                         300, 110);
@@ -126,7 +150,7 @@ public class frmEditProfile {
         grid.getChildren().addAll(btnCancel, btnSave);
 
         // Create the scene and display the window
-        Scene scene = new Scene(grid, 550, 190);
+        Scene scene = new Scene(grid, 550, 400);
         window.setScene(scene);
         window.showAndWait();
         
