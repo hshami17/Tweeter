@@ -178,6 +178,9 @@ public class frmRegister {
                 else if (m.find()){
                     AlertBox.display("Invalid", "Please make sure the username contains no special characters.", 320, 100);
                 }
+                else if (txtUsername.getText().trim().contains(" ")){
+                    AlertBox.display("Invalid", "Please make sure the username contains no spaces.", 320, 100);
+                }
                 else if (validAccount()) {
                     success = true;
                     // Set the gender string

@@ -22,6 +22,9 @@ public class frmHashTagSearch {
     private static ScrollPane scrollPane;
     private static Scene scene1, scene2;
 
+    /**
+     * Display Search by HashTag window
+     */
     public static void display() {
         // Create new window
         window = new Stage();
@@ -88,6 +91,9 @@ public class frmHashTagSearch {
         window.showAndWait();
     }
 
+    /**
+     * Retrieve all hash tag posts containing the phrase
+     */
     public static void getHashTagPosts(){
         borderPane = new BorderPane();
         centerPane = new VBox(6);
@@ -112,6 +118,9 @@ public class frmHashTagSearch {
         displayPosts();
     }
 
+    /**
+     * Display the posts containing the phrase to the window
+     */
     private static void displayPosts(){
         // Create top pane layout
         HBox topPane = new HBox(10);
@@ -143,6 +152,7 @@ public class frmHashTagSearch {
         });
         btnClose.setTranslateX(-5);
         btnClose.setTranslateY(-5);
+        btnClose.setPrefSize(70, 10);
         btnClose.defaultButtonProperty().bind(btnClose.focusedProperty());
         btnClose.setFont(Font.font("Helvetica", 15));
 

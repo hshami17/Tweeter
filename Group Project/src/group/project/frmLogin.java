@@ -34,6 +34,9 @@ public class frmLogin extends Application {
         display();
     }
 
+    /**
+     * Display the Tweeter Login window
+     */
     public static void display(){
         //Setup the window
         Stage window = new Stage();

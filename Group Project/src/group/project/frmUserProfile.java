@@ -10,6 +10,11 @@ import javafx.scene.control.*;
 import javafx.geometry.*;
 
 public class frmUserProfile {
+
+    /**
+     * Display the User Profile window
+     * @param user The user who's info is being displayed
+     */
     public static void display(User user){
         // Create new window
         Stage window = new Stage();

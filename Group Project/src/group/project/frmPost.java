@@ -2,6 +2,7 @@ package group.project;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -13,6 +14,9 @@ public class frmPost {
     private static Stage window;
     private static TextArea txtPost;
 
+    /**
+     * Display the New Post window
+     */
     public static void display(){
         // Create a new post window
         window = new Stage();
@@ -36,6 +40,10 @@ public class frmPost {
         grid.setHgap(10);
         grid.setVgap(10);
 
+        Text txtCharCount = new Text("140 characters");
+        txtCharCount.setFont(Font.font("Helvetica", 12));
+        GridPane.setConstraints(txtCharCount, 3, 7);
+
         // Set 140 character limit on post field
         txtPost = new TextArea();
         ChangeListener<String> changeListener = new ChangeListener<String>() {
@@ -44,7 +52,8 @@ public class frmPost {
                 if (newValue.length() > MAX_SIZE){
                     txtPost.setText(txtPost.getText(0, MAX_SIZE));
                 }
-            }
+                txtCharCount.setText(MAX_SIZE-txtPost.getText().length() + " characters");
+        }
         };
         txtPost.textProperty().addListener(changeListener);
         txtPost.setFont(Font.font("Helvetica", 17));
@@ -99,7 +108,6 @@ public class frmPost {
         GridPane.setConstraints(btnCancel, 3, 7);
         btnCancel.setTranslateX(57);
 
-
         // Translate X and Y properties for cleaner GUI
         txtPost.setTranslateY(10);
         txtPost.setTranslateX(-10);
@@ -109,9 +117,11 @@ public class frmPost {
         btnCancel.setTranslateY(-5);
         rbPublic.setTranslateX(-10);
         rbPrivate.setTranslateX(-10);
+        txtCharCount.setTranslateX(210);
+        txtCharCount.setTranslateY(-5);
 
         // Add all controls to the grid
-        grid.getChildren().addAll(txtPost, btnPost, btnCancel, rbPublic, rbPrivate);
+        grid.getChildren().addAll(txtPost, btnPost, btnCancel, rbPublic, rbPrivate, txtCharCount);
 
         // Create the scene and display the window
         Scene scene = new Scene(grid, 420, 190);
@@ -119,6 +129,9 @@ public class frmPost {
         window.showAndWait();
     }
 
+    /**
+     * Handle the close event for the New Post window
+     */
     private static void closeWindow(){
         if (!txtPost.getText().trim().isEmpty()) {
             ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",

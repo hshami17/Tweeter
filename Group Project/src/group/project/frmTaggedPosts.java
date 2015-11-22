@@ -20,6 +20,9 @@ public class frmTaggedPosts {
     private static VBox centerPane;
     private static ScrollPane scrollPane;
 
+    /**
+     * Display the Tagged Posts window
+     */
     public static void display(){
         // Create new window
         Stage window = new Stage();
@@ -54,6 +57,7 @@ public class frmTaggedPosts {
             window.close();
             frmHomePage.getAllPublicPosts();
         });
+        btnClose.defaultButtonProperty().bind(btnClose.focusedProperty());
         btnClose.setTranslateX(-5);
         btnClose.setTranslateY(-5);
         btnClose.setFont(Font.font("Helvetica", 15));
