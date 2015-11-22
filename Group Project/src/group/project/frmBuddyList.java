@@ -131,7 +131,7 @@ public class frmBuddyList {
                     // Add items to center pane
                     center.getChildren().addAll(person);
                     // Add post interaction buttons
-                    AddBuddyComponents(f.get(i));
+                    addBuddyComponents(f.get(i));
                 //}
             }
         }
@@ -152,19 +152,7 @@ public class frmBuddyList {
         btnFollow.setTranslateX(55);
         
         btnFollow.setOnAction(event -> {
-            if(btnFollow.getText().equals("Unfollow")){
-                ConfirmBox.display("Unfollow User", "Are you sure you no longer want to"
-                        + " subscribe to this user?", 300, 110);
-                if(ConfirmBox.result){
-                    
-                }
-                else if(rbFollowers.isSelected()){
-                    
-                }
-                else if(rbFollowing.isSelected()){
-                
-                }
-            }
+            
         });
         
         btnFollow.setOnAction(event -> {
@@ -187,11 +175,11 @@ public class frmBuddyList {
         center.getChildren().add(divider);
         
         // Set center pane alignment and color
-        centerPane.setAlignment(Pos.TOP_CENTER);
-        centerPane.setStyle("-fx-background-color: #EFF2FB");
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.setContent(center);
-        borderPane.setCenter(scroll);
+        center.setAlignment(Pos.TOP_CENTER);
+        center.setStyle("-fx-background-color: #EFF2FB");
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+        scroll.setContent(center);
+        border.setCenter(scroll);
     
     }
      
