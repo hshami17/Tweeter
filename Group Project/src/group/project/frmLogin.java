@@ -34,6 +34,9 @@ public class frmLogin extends Application {
         display();
     }
 
+    /**
+     * Display the Tweeter Login window
+     */
     public static void display(){
         //Setup the window
         Stage window = new Stage();
@@ -90,7 +93,7 @@ public class frmLogin extends Application {
         // Password text field
         txtPassword = new PasswordField();
         txtPassword.setText("toilet");
-        txtPassword.setFont(Font.font("Helvetica", 18));
+        txtPassword.setFont(Font.font(18));
         GridPane.setConstraints(txtPassword, 1, 2);
         GridPane.setColumnSpan(txtPassword, 2);
 
@@ -194,8 +197,10 @@ public class frmLogin extends Application {
         Scanner file = new Scanner(new File("LoginInfo.txt"));
         while(file.hasNext()){
             if((txtUsername.getText().trim().equals(file.next())) &&
-                    txtPassword.getText().trim().equals(file.next()))
+                    txtPassword.getText().trim().equals(file.next())) {
+                Profile.password = txtPassword.getText().trim();
                 return true;
+            }
         }
         return false;
     }

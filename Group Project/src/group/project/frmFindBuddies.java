@@ -1,32 +1,26 @@
 package group.project;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Line;
+import javafx.scene.text.*;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
-import java.io.IOException;
 
-
-public class frmTaggedPosts {
-
+public class frmFindBuddies {
     private static BorderPane borderPane;
     private static VBox centerPane;
-    private static ScrollPane scrollPane;
 
     /**
-     * Display the Tagged Posts window
+     * Display Find Buddies window
      */
-    public static void display(){
+    public static void display() {
         // Create new window
         Stage window = new Stage();
-        window.setTitle("Tagged Posts");
+        window.setTitle("Find Buddies");
         window.setResizable(false);
 
         // Disallow inputs from parent window
@@ -46,7 +40,7 @@ public class frmTaggedPosts {
         bottomPane.setPadding(new Insets(10, 3, 3, 0));
 
         // Create the title text
-        Text txtTitle = new Text("Tagged Posts");
+        Text txtTitle = new Text("Find Buddies");
         txtTitle.setFont(Font.font("Helvetica", FontWeight.SEMI_BOLD, 30));
         txtTitle.setFill(Color.web("#CBE5FF"));
         txtTitle.setTranslateY(5);
@@ -62,14 +56,15 @@ public class frmTaggedPosts {
         btnClose.setTranslateY(-5);
         btnClose.setFont(Font.font("Helvetica", 15));
 
-        // Populate center pane with all tagged posts for current user
-        getAllTaggedPosts();
-
         // Insert controls into their layouts and setup border pane
         bottomPane.getChildren().add(btnClose);
         topPane.getChildren().add(txtTitle);
         borderPane.setTop(topPane);
         borderPane.setBottom(bottomPane);
+
+        // Get all the users
+        UserRepository.sortUserRepoByUsername();
+        getAllUsers();
 
         // Create the scene and display the window
         Scene scene = new Scene(borderPane, 450, 450);
@@ -78,29 +73,35 @@ public class frmTaggedPosts {
     }
 
     /**
-     * Get all the posts the currently logged in user was tagged in.
+     * Get all of the currently registered users in the system
      */
-    public static void getAllTaggedPosts() {
-        centerPane = new VBox(6);
-        scrollPane = new ScrollPane();
+    private static void getAllUsers(){
+        centerPane = new VBox(10);
+        ScrollPane scrollPane = new ScrollPane();
         centerPane.setPadding(new Insets(5, 5, 5, 5));
-        if (Profile.taggedPostSize() != 0) {
-            for (int i=0; i<Profile.taggedPostSize(); i++) {
-                Post taggedPost = Profile.getTaggedPost(i);
+        centerPane.setStyle("-fx-background-color: #EFF2FB");
+        for (int i=0; i<UserRepository.getRepoSize(); i++){
+            User user = UserRepository.getUser(i);
+            if (!user.getUsername().equals(Profile.username)) {
+                // Get the username
+                Text txtUsername = new Text(user.getUsername());
+                txtUsername.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
 
-                // Get the post author
-                Text txtAuthor = new Text("@" + taggedPost.getAuthor().trim());
-                txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
+                // Create view profile button to display user's profile
+                Button btnViewProfile = new Button("View Profile");
+                btnViewProfile.setOnAction(event -> frmUserProfile.display(user));
+                btnViewProfile.defaultButtonProperty().bind(btnViewProfile.focusedProperty());
+                btnViewProfile.setFont(Font.font("Helvetica", 12));
 
-                // Get the post
-                Text txtPost = new Text(taggedPost.getMessage().trim());
-                txtPost.setFont(Font.font("Helvetica", 17));
-                txtPost.setWrappingWidth(400);
+                // Create line to divide posts
+                Line divider = new Line(0, 100, 421, 100);
+                divider.setStroke(Color.LIGHTGRAY);
 
-                centerPane.getChildren().addAll(txtAuthor, txtPost);
-                taggedPost.addPostComponents(centerPane, scrollPane, borderPane, "Tagged Posts");
+                centerPane.getChildren().addAll(txtUsername, btnViewProfile, divider);
             }
         }
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        scrollPane.setContent(centerPane);
+        borderPane.setCenter(scrollPane);
     }
 }
-

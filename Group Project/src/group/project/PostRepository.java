@@ -11,6 +11,9 @@ public class PostRepository {
     private static ArrayList<Post> postRepo;
     public static Integer currentID = 0;
 
+    /**
+     * Populate the post repo from the Post.txt file
+     */
     public static void populatePostRepository(){
         try {
             postRepo = new ArrayList<>();
@@ -38,15 +41,28 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Add new post into the post repo
+     * @param newPost New post being added into the repo
+     */
     public static void add(Post newPost){
         postRepo.add(newPost);
     }
 
+    /**
+     * Remove a post from the post repo
+     * @param removePost The post to be removed in the repo
+     */
     public static void deletePost(Post removePost){
         // Delete post from index returned by search
         postRepo.remove(search(removePost.getMsg_ID()));
     }
 
+    /**
+     * Search for a post in the post repo
+     * @param ID The post ID to be used as the search key
+     * @return The index if post found or -1 if not found
+     */
     public static int search(String ID){
         for (int i=0; i<postRepo.size(); i++){
             if (postRepo.get(i).getMsg_ID().equals(ID)){
@@ -56,6 +72,9 @@ public class PostRepository {
         return -1;
     }
 
+    /**
+     * Write all posts currently in the repo to the Post.txt file
+     */
     public static void saveAllPosts(){
         try {
             PrintWriter out = new PrintWriter(new FileWriter("Post.txt"));
@@ -69,11 +88,16 @@ public class PostRepository {
         }
     }
 
-    public static Post getPost(int ID){
-        return postRepo.get(ID);
-    }
+    /**
+     * Get a post at a specified index from the repo
+     * @param index Index in post repo to be returned
+     * @return The post at a given index in the post repo
+     */
+    public static Post getPost(int index) {return postRepo.get(index);}
 
-    public static int getRepoSize(){return postRepo.size();}
-
-
+    /**
+     * Get the current size of the post repo
+     * @return The size of the post repo
+     */
+    public static int getRepoSize() {return postRepo.size();}
 }
