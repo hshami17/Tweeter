@@ -110,7 +110,7 @@ public class frmBuddyList {
                     // Add items to center pane
                     center.getChildren().addAll(person);
                     // Add post interaction buttons
-                    //addBuddyComponents(addFollowers);
+                    addBuddyComponents(f.get(i));
                 //}
             
             }
@@ -131,17 +131,18 @@ public class frmBuddyList {
                     // Add items to center pane
                     center.getChildren().addAll(person);
                     // Add post interaction buttons
-                    //addBuddyComponents(addFollowing);
+                    AddBuddyComponents(f.get(i));
                 //}
             }
         }
     }
 
-    /**
-    private static void addBuddyComponents(){
+    
+    private static void addBuddyComponents(User u){
         //Set initial state of follow button
         Button btnFollow = new Button();
-        if(){
+        ArrayList<User> f = Profile.getFollowings();
+        if(f.contains(u)){
             btnFollow.setText("Unfollow");
         }
         else{
@@ -167,7 +168,7 @@ public class frmBuddyList {
         });
         
         btnFollow.setOnAction(event -> {
-            if(){
+            if(btnFollow.getText().equals("Follow")){
                 btnFollow.setText("Unfollow");
             }
             else{
@@ -193,5 +194,5 @@ public class frmBuddyList {
         borderPane.setCenter(scroll);
     
     }
-     */
+     
 }
