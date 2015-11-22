@@ -14,6 +14,9 @@ public class frmFindBuddies {
     private static BorderPane borderPane;
     private static VBox centerPane;
 
+    /**
+     * Display Find Buddies window
+     */
     public static void display() {
         // Create new window
         Stage window = new Stage();
@@ -69,6 +72,9 @@ public class frmFindBuddies {
         window.showAndWait();
     }
 
+    /**
+     * Get all of the currently registered users in the system
+     */
     private static void getAllUsers(){
         centerPane = new VBox(10);
         ScrollPane scrollPane = new ScrollPane();
@@ -81,6 +87,7 @@ public class frmFindBuddies {
                 Text txtUsername = new Text(user.getUsername());
                 txtUsername.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
 
+                // Create view profile button to display user's profile
                 Button btnViewProfile = new Button("View Profile");
                 btnViewProfile.setOnAction(event -> frmUserProfile.display(user));
                 btnViewProfile.defaultButtonProperty().bind(btnViewProfile.focusedProperty());

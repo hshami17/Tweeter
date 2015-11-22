@@ -19,6 +19,9 @@ public class frmHomePage {
     public static RadioButton rbPublic;
     public static RadioButton rbPrivate;
 
+    /**
+     * Display the Tweeter Home window
+     */
     public static void display(){
         // Create new window
         window = new Stage();
@@ -194,6 +197,9 @@ public class frmHomePage {
         window.showAndWait();
     }
 
+    /**
+     * Close event for the home window
+     */
     private static void closeWindow(){
         if (!frmLogin.exploreMode) {
             ConfirmBox.display("Log out", "Are you sure you want to log out?", 300, 110);
@@ -244,6 +250,10 @@ public class frmHomePage {
         }
     }
 
+    /**
+     * Get all private posts from post repo and
+     * them add to the center pane.
+     */
     public static void getAllPrivatePosts(){
         // Select private radio button
         rbPrivate.setSelected(true);

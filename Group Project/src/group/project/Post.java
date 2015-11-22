@@ -21,6 +21,14 @@ public class Post {
     private boolean isPublic;
     private int likeCount;
 
+    /**
+     * Constructor for a new post object
+     * @param Msg_ID Post ID
+     * @param author The author of the new post
+     * @param message The contents of the post
+     * @param isPublic The post visibility
+     * @param likeCount Number of likes for the post
+     */
     Post(String Msg_ID, String author, String message,
          boolean isPublic, int likeCount){
         this.Msg_ID = Msg_ID;
@@ -30,46 +38,93 @@ public class Post {
         this.likeCount = likeCount;
     }
 
+    /**
+     * Set the post author
+     * @param author The name of the author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * Get the author of the post
+     * @return The name of the author
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Set the post ID
+     * @param msg_ID The ID of the post
+     */
     public void setMsg_ID(String msg_ID) {
         Msg_ID = msg_ID;
     }
 
+    /**
+     * Get the post ID
+     * @return The ID of the post
+     */
     public String getMsg_ID() {
         return Msg_ID;
     }
 
+    /**
+     * Set the contents of the post
+     * @param message The contents of the post
+     */
     public void setMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Get the contents of the post
+     * @return The contents of the post
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Set the visibility of the post
+     * @param isPublic The visibility of the post
+     */
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
+    /**
+     * Get the visibility of the post
+     * @return The visibility of the post
+     */
     public boolean isPublic() {
         return isPublic;
     }
 
+    /**
+     * Set the number of likes of the post
+     * @param likeCount The number of likes for the post
+     */
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
+    /**
+     * Get the number of likes of the post
+     * @return The number of liked for the post
+     */
     public Integer getLikeCount() {
         return likeCount;
     }
 
+    /**
+     * Add the post interaction buttons and like count when displaying post
+     * @param centerPane Center layout in the border pane
+     * @param scrollPane Scroll pane for the center pane to be in
+     * @param borderPane The border pane to add the center pane into
+     * @param form The window in which the posts are being printed
+     */
     public void addPostComponents(VBox centerPane, ScrollPane scrollPane,
                                   BorderPane borderPane, String form){
         // Create text to display likes
@@ -103,6 +158,7 @@ public class Post {
                 if (ConfirmBox.result) {
                     PostRepository.deletePost(this);
                     PostRepository.saveAllPosts();
+                    FileUpdater.removePostID(Msg_ID);
                     if (form.equals("Home")) {
                         if (frmHomePage.rbPublic.isSelected())
                             frmHomePage.getAllPublicPosts();
@@ -193,11 +249,16 @@ public class Post {
         borderPane.setCenter(scrollPane);
     }
 
+    /**
+     * Looks for a certain hash tag phrase in the post content
+     * @param phrase The hash tag phrase being searched for
+     * @return True of false if the hash tag phrase was found in the post
+     */
     public boolean containsHashTagPhrase(String phrase) {
         if (message.contains("#") && message.length() > 1) {
             int i = message.indexOf("#") + 1;
             boolean done = false;
-            // Extract the username tagged from the post
+            // Extract the hash tag phrase from post
             while (!done) {
                 if (i + 1 > message.length())
                     done = true;
@@ -210,15 +271,17 @@ public class Post {
                 }
             }
             String phraseCompare = message.substring(message.indexOf("#") + 1, i).trim();
+            // Return false if no content after hash tag
             if (phraseCompare.length() == 0)
                 return false;
-            // Check for special characters at the end of the phrase
+            // Check for special characters and remove if any found
             String endChar = phraseCompare.substring(phraseCompare.length() - 1);
-            Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+            Pattern p = Pattern.compile("[^a-zA-Z0-9 ]", Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(endChar);
             if (m.find()) {
-                phraseCompare = phraseCompare.replaceAll("[^a-z0-9 ]", "");
+                phraseCompare = phraseCompare.replaceAll("[^a-zA-Z0-9 ]", "");
             }
+            // Compare if phrase searching for equals phrase in the post
             if (phrase.equals(phraseCompare)){
                 return true;
             }

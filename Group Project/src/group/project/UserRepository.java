@@ -10,6 +10,9 @@ import java.util.Scanner;
 public class UserRepository {
     private static ArrayList<User> userRepo;
 
+    /**
+     * Populate the user repo with all the registered users in the system
+     */
     public static void populateUserRepository(){
         try {
             userRepo = new ArrayList<>();
@@ -44,6 +47,11 @@ public class UserRepository {
         return -1;
     }
 
+    /**
+     * Get a specified user from the user repo
+     * @param username Username for the user being retrieved
+     * @return The user object being searched for
+     */
     public static User getUser(String username){
         int key = search(username);
         if (key != -1){
@@ -53,13 +61,29 @@ public class UserRepository {
             return new User();
     }
 
+    /**
+     * Get the user from the user repo at a specified index
+     * @param index The index to be returned for the user repo
+     * @return The user object from the specified index
+     */
     public static User getUser(int index) {return userRepo.get(index);}
 
+    /**
+     * Get the current size of the user repo
+     * @return The size of the user repo
+     */
     public static int getRepoSize() {return userRepo.size();}
 
+    /**
+     * Sort the users in the user repo by username
+     */
     public static void sortUserRepoByUsername(){
         Collections.sort(userRepo);
     }
 
+    /**
+     * Add newly registered user into the user repo
+     * @param newUser The new user object being added
+     */
     public static void add(User newUser) {userRepo.add(newUser);}
 }

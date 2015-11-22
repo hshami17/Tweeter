@@ -9,29 +9,32 @@ import java.util.regex.Pattern;
 public class Profile {
     public static String username;
     public static String password;
-    private static ArrayList<Post> userPosts = new ArrayList<>();
     private static ArrayList<Post> likedPosts = new ArrayList<>();
     private static ArrayList<Post> taggedPosts = new ArrayList<>();
     private static ArrayList<User> followings = new ArrayList<>();
     private static ArrayList<User> followers = new ArrayList<>();
 
+    /**
+     * Clear all current User info
+     */
     public static void clear(){
         username = "";
-        userPosts = new ArrayList<>();
         likedPosts = new ArrayList<>();
         taggedPosts = new ArrayList<>();
         followings = new ArrayList<>();
         followers = new ArrayList<>();
     }
 
+    /**
+     * Create a new post authored by current user
+     * @param content The content of the post
+     * @param isPublic The visibility of the post
+     */
     public static void newPost(String content, boolean isPublic) {
         PostRepository.currentID++;
         // Add new user post to post repository
         PostRepository.add(new Post(PostRepository.currentID.toString(),
                 username, content, isPublic, 0));
-        // Add post to current users repository
-        addPost(PostRepository.currentID.toString(), username, content, isPublic, 0);
-
 
         // Check if the message contained an @ tag
         if (content.contains("@") && content.length() > 1) {
@@ -61,29 +64,39 @@ public class Profile {
                 taggedUser = taggedUser.replaceAll("[^a-z0-9 ]", "");
             }
             // Update TaggedPost.txt
-            FileUpdater.updateTaggedPostFile(content, taggedUser);
+            FileUpdater.updateTaggedPostFile(PostRepository.currentID.toString(), taggedUser);
         }
     }
 
-    private static void addPost(String ID, String username, String content, boolean isPublic, int likeCount){
-        userPosts.add(new Post(PostRepository.currentID.toString(),
-                username, content, isPublic, likeCount));
-    }
-
+    /**
+     * Add liked post into current users list and UserLikes.txt
+     * @param liked The post that was liked
+     */
     public static void addLikedPost(Post liked) {
         likedPosts.add(liked);
         FileUpdater.addToUserLikesFile(username, liked.getMsg_ID());
     }
 
+    /**
+     * Add tagged post into current users list
+     * @param tagged The post the user was tagged in
+     */
     public static void addTaggedPost(Post tagged){
         taggedPosts.add(tagged);
     }
 
+    /**
+     * Remove liked post from users list and UserLikes.txt
+     * @param ID The post ID that was un-liked
+     */
     public static void removeLikedPost(String ID){
         likedPosts.remove(searchLikedPosts(ID));
         FileUpdater.removeFromUserLikesFile(username, ID);
     }
 
+    /**
+     * Get all the currents user's liked from UserLikes.txt
+     */
     public static void retrieveLikes(){
         try {
             if (PostRepository.getRepoSize() != 0) {
@@ -124,6 +137,9 @@ public class Profile {
         }
     }
 
+    /**
+     * Get all the posts current user was tagged in from TaggedPost.txt
+     */
     public static void retrieveTaggedPosts(){
         try {
             if (PostRepository.getRepoSize() != 0) {
@@ -163,10 +179,24 @@ public class Profile {
         }
     }
 
+    /**
+     * The current size of the user's tagged post list
+     * @return The size of the tagged post list
+     */
     public static int taggedPostSize() {return taggedPosts.size();}
 
+    /**
+     * Get a tagged post at a specified index
+     * @param index The index to get the post from in the list
+     * @return Tagged post from the index specified
+     */
     public static Post getTaggedPost(int index) {return taggedPosts.get(index);}
 
+    /**
+     * Get whether or not a certain post was liked
+     * @param ID The post ID being checked
+     * @return True or false if the post ID was liked
+     */
     public static boolean getLikedPost(String ID){
         if (searchLikedPosts(ID) != -1)
             return true;
@@ -174,6 +204,11 @@ public class Profile {
             return false;
     }
 
+    /**
+     * Search through the user's liked post list
+     * @param ID The post ID being used as the search key
+     * @return The index if the post was found or -1 if not
+     */
     private static int searchLikedPosts(String ID){
         for (int i=0; i<likedPosts.size(); i++){
             if (likedPosts.get(i).getMsg_ID().equals(ID)){
