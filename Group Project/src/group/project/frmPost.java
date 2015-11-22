@@ -2,6 +2,7 @@ package group.project;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.scene.*;
@@ -41,7 +42,7 @@ public class frmPost {
         grid.setVgap(10);
 
         Text txtCharCount = new Text("140 characters");
-        txtCharCount.setFont(Font.font("Helvetica", 12));
+        txtCharCount.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
         GridPane.setConstraints(txtCharCount, 3, 7);
 
         // Set 140 character limit on post field
@@ -117,7 +118,7 @@ public class frmPost {
         btnCancel.setTranslateY(-5);
         rbPublic.setTranslateX(-10);
         rbPrivate.setTranslateX(-10);
-        txtCharCount.setTranslateX(210);
+        txtCharCount.setTranslateX(205);
         txtCharCount.setTranslateY(-5);
 
         // Add all controls to the grid
