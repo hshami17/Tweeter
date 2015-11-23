@@ -2,6 +2,7 @@ package group.project;
 
 public class User implements Comparable<User> {
     private String username;
+    private String userID;
     private String gender;
     private String age;
     private String userBio;
@@ -13,8 +14,9 @@ public class User implements Comparable<User> {
         userBio = "";
     }
 
-    User(String username, String gender, String age, String userBio){
+    User(String username, String userID, String gender, String age, String userBio){
         this.username = username;
+        this.userID = userID;
         this.gender = gender;
         this.age = age;
         this.userBio = userBio;
@@ -26,6 +28,14 @@ public class User implements Comparable<User> {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getUserID() {
+        return userID;
     }
 
     public void setGender(String gender) {
@@ -47,6 +57,10 @@ public class User implements Comparable<User> {
     public void setUserBio(String userBio) {this.userBio = userBio;}
 
     public String getUserBio() {return userBio;}
+
+    public String toString(){
+        return username + " " + userID + " " + gender + " " + age + " " + userBio;
+    }
 
     @Override
     public int compareTo(User o) {

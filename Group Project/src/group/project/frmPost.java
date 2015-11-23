@@ -1,6 +1,10 @@
 package group.project;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -9,6 +13,8 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.beans.value.ChangeListener;
+
+import java.awt.*;
 
 public class frmPost {
 
@@ -42,7 +48,8 @@ public class frmPost {
         grid.setVgap(10);
 
         Text txtCharCount = new Text("140 characters");
-        txtCharCount.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
+        txtCharCount.setFont(Font.font("Helvetica", 12));
+        txtCharCount.setFill(javafx.scene.paint.Paint.valueOf("#898989"));
         GridPane.setConstraints(txtCharCount, 3, 7);
 
         // Set 140 character limit on post field
@@ -85,8 +92,10 @@ public class frmPost {
                 AlertBox.display("Invalid", "Please enter content for your post", 250, 100);
             }
             else {
+                // Remove any new line instances from the post
+                txtPost.setText(txtPost.getText().replaceAll("\\n", " "));
                 // Create a new post authored by current user
-                Profile.newPost(txtPost.getText(), rbPublic.isSelected());
+                Profile.newPost(txtPost.getText().trim(), rbPublic.isSelected());
                 PostRepository.saveAllPosts();
 
                 if (rbPublic.isSelected())
@@ -118,8 +127,8 @@ public class frmPost {
         btnCancel.setTranslateY(-5);
         rbPublic.setTranslateX(-10);
         rbPrivate.setTranslateX(-10);
-        txtCharCount.setTranslateX(205);
-        txtCharCount.setTranslateY(-5);
+        txtCharCount.setTranslateX(200);
+        txtCharCount.setTranslateY(-35);
 
         // Add all controls to the grid
         grid.getChildren().addAll(txtPost, btnPost, btnCancel, rbPublic, rbPrivate, txtCharCount);

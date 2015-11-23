@@ -12,12 +12,13 @@ import javafx.scene.control.*;
 import javafx.geometry.*;
 
 public class frmHomePage {
-    private static Stage window;
+    public static Stage window;
     private static BorderPane borderPane;
     private static VBox centerPane;
     private static ScrollPane scrollPane;
     public static RadioButton rbPublic;
     public static RadioButton rbPrivate;
+    private static TextArea txtUserInfo;
 
     /**
      * Display the Tweeter Home window
@@ -47,7 +48,7 @@ public class frmHomePage {
         topPane.setPadding(new Insets(3, 3, 15, 0));
 
         // Create the text area for logged in user info
-        TextArea txtUserInfo = new TextArea();
+        txtUserInfo = new TextArea();
         txtUserInfo.setText("@" + UserRepository.getUser(Profile.username).getUsername() + "\n\n" +
                 UserRepository.getUser(Profile.username).getGender() + "\n" +
                 UserRepository.getUser(Profile.username).getAge() + "\n" +
@@ -62,7 +63,12 @@ public class frmHomePage {
         // Create edit profile button and open edit window when clicked
         Button btnEditProfile = new Button("Edit Profile");
         btnEditProfile.setOnAction(event -> {
-
+            frmEditProfile.display();
+            refreshUserInfoBox();
+            if (rbPublic.isSelected())
+                getAllPublicPosts();
+            else
+                getAllPrivatePosts();
         });
         btnEditProfile.defaultButtonProperty().bind(btnEditProfile.focusedProperty());
         btnEditProfile.setFont(Font.font("Helvetica", 15));
@@ -285,6 +291,16 @@ public class frmHomePage {
                 borderPane.setCenter(new VBox(0));
             }
         }
+    }
+
+    /**
+     * Reset the contents of the user info box in the left pane.
+     */
+    private static void refreshUserInfoBox(){
+        txtUserInfo.setText("@" + UserRepository.getUser(Profile.username).getUsername() + "\n\n" +
+                UserRepository.getUser(Profile.username).getGender() + "\n" +
+                UserRepository.getUser(Profile.username).getAge() + "\n" +
+                UserRepository.getUser(Profile.username).getUserBio().trim());
     }
 }
 

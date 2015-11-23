@@ -119,6 +119,7 @@ public class frmLogin extends Application {
                     Profile.clear();
                     // Get the username from text field and get current user likes from file
                     Profile.username = txtUsername.getText().trim();
+                    Profile.password = txtPassword.getText().trim();
                     Profile.retrieveLikes();
                     Profile.retrieveTaggedPosts();
                     exploreMode = false;
@@ -198,7 +199,6 @@ public class frmLogin extends Application {
         while(file.hasNext()){
             if((txtUsername.getText().trim().equals(file.next())) &&
                     txtPassword.getText().trim().equals(file.next())) {
-                Profile.password = txtPassword.getText().trim();
                 return true;
             }
         }

@@ -191,9 +191,13 @@ public class frmRegister {
                         gender = rbFemale.getText();
                     // Add new user to the repository
                     String username = txtUsername.getText().trim();
+                    Integer ID = UserRepository.userID++;
+                    // Increment ID if it is already taken
+                    while (UserRepository.IDtaken(ID.toString()))
+                        ID++;
                     String age = txtAge.getText().trim();
                     String bio = txtBio.getText();
-                    User newUser = new User(username, gender, age, bio);
+                    User newUser = new User(username, ID.toString(), gender, age, bio);
                     UserRepository.add(newUser);
                     // Add new user to the appropriate files
                     FileUpdater.addNewUserToFiles(newUser, txtPassword.getText().trim());
