@@ -143,6 +143,7 @@ public class Profile {
     public static void retrieveTaggedPosts(){
         try {
             if (PostRepository.getRepoSize() != 0) {
+                taggedPosts = new ArrayList<>();
                 // Open the user likes file
                 Scanner file = new Scanner(new File("TaggedPost.txt"));
                 // Set flag for when current user is found

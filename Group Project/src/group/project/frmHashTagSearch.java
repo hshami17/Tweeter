@@ -19,8 +19,7 @@ public class frmHashTagSearch {
     private static double searchWindowX, searchWindowY;
     private static BorderPane borderPane;
     private static VBox centerPane;
-    private static ScrollPane scrollPane;
-    private static Scene scene1, scene2;
+    private static Scene scene1;
 
     /**
      * Display Search by HashTag window
@@ -97,7 +96,7 @@ public class frmHashTagSearch {
     public static void getHashTagPosts(){
         borderPane = new BorderPane();
         centerPane = new VBox(6);
-        scrollPane = new ScrollPane();
+        ScrollPane scrollPane = new ScrollPane();
 
         for (int i = PostRepository.getRepoSize() - 1; i >= 0; i--) {
             Post post = PostRepository.getPost(i);
@@ -163,7 +162,7 @@ public class frmHashTagSearch {
         borderPane.setBottom(bottomPane);
         centerPane.setPadding(new Insets(5, 0, 0, 5));
 
-        scene2 = new Scene(borderPane, 450, 450);
+        Scene scene2 = new Scene(borderPane, 450, 450);
 
         window.setScene(scene2);
         window.setX(420);

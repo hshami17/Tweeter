@@ -305,6 +305,182 @@ public class FileUpdater {
     }
 
     /**
+     * Update the username when changed across all files
+     * @param oldUsername The old username set by user
+     * @param newUsername New username set by user
+     */
+    public static void updateUsername(String oldUsername, String newUsername){
+        try {
+            // Open user likes file
+            Scanner file = new Scanner(new File("UserLikes.txt"));
+            PrintWriter writer = new PrintWriter("temp.txt");
+            String nxtItem;
+            boolean userFound = false;
+
+            // Read contents of file
+            while (file.hasNext() && !userFound) {
+                nxtItem = file.next();
+
+                // Write new username when old one found
+                if (nxtItem.equals(oldUsername)) {
+                    userFound = true;
+                    writer.println(newUsername);
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            // Print rest of file
+            while (file.hasNext())
+                writer.println(file.next());
+            writer.close();
+            // Transfer file contents into user likes file
+            transferFileContent("temp.txt", "UserLikes.txt");
+
+            // Open tagged post file
+            file = new Scanner(new File("TaggedPost.txt"));
+            writer = new PrintWriter("temp.txt");
+            userFound = false;
+            // Read contents of file
+            while (file.hasNext() && !userFound) {
+                nxtItem = file.next();
+
+                // Write new username when old one found
+                if (nxtItem.equals(oldUsername)) {
+                    userFound = true;
+                    writer.println(newUsername);
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            // Print rest of file
+            while (file.hasNext())
+                writer.println(file.next());
+            writer.close();
+            // Transfer file contents into tagged post file
+            transferFileContent("temp.txt", "TaggedPost.txt");
+
+
+            // Open the login info file
+            file = new Scanner(new File("LoginInfo.txt"));
+            writer = new PrintWriter("temp.txt");
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                if (nxtItem.equals(oldUsername)) {
+                    writer.println(newUsername + " " + Profile.password);
+                    String skip = file.next();
+                }
+                else
+                    writer.println(nxtItem + " " + file.next());
+            }
+            writer.close();
+            transferFileContent("temp.txt", "LoginInfo.txt");
+
+            // Open the post file
+            file = new Scanner(new File("Post.txt"));
+            writer = new PrintWriter("temp.txt");
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                // If the old username is found for author, replace with new username
+                if (nxtItem.equals(oldUsername)) {
+                    writer.println(newUsername + " " + file.next() + " " + file.next() + " " +
+                            file.next() + " " + file.nextLine());
+                }
+                // Else print the line as it was read
+                else{
+                    writer.println(nxtItem + " " + file.next() + " " + file.next() + " " +
+                            file.next() + " " + file.nextLine());
+                }
+            }
+            writer.close();
+            // Transfer info into the post file
+            transferFileContent("temp.txt", "Post.txt");
+            // Repopulate post and tagged post repo to reflect any changes
+            PostRepository.populatePostRepository();
+            Profile.retrieveTaggedPosts();
+
+            // Open the followers file
+            file = new Scanner(new File("Followers.txt"));
+            writer = new PrintWriter("temp.txt");
+            userFound = false;
+            // Read contents of file
+            while (file.hasNext() && !userFound) {
+                nxtItem = file.next();
+
+                // Write new username when old one found
+                if (nxtItem.equals(oldUsername)) {
+                    userFound = true;
+                    writer.println(newUsername);
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            // Print rest of file
+            while (file.hasNext())
+                writer.println(file.next());
+            writer.close();
+            // Transfer file contents into tagged post file
+            transferFileContent("temp.txt", "Followers.txt");
+
+            // Open the following file
+            file = new Scanner(new File("Following.txt"));
+            writer = new PrintWriter("temp.txt");
+            userFound = false;
+            // Read contents of file
+            while (file.hasNext() && !userFound) {
+                nxtItem = file.next();
+
+                // Write new username when old one found
+                if (nxtItem.equals(oldUsername)) {
+                    userFound = true;
+                    writer.println(newUsername);
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            // Print rest of file
+            while (file.hasNext())
+                writer.println(file.next());
+            writer.close();
+            // Transfer file contents into tagged post file
+            transferFileContent("temp.txt", "Following.txt");
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete user from all files
+     * @param username Username of the user to remove
+     */
+    public static void deleteUserFromFiles(String username){
+        try {
+            // Open user likes file
+            Scanner file = new Scanner(new File("UserLikes.txt"));
+            PrintWriter writer = new PrintWriter("temp.txt");
+            boolean endReached = false;
+            String nxtItem;
+
+            while (file.hasNext() && !endReached){
+                nxtItem = file.next();
+
+                if (nxtItem.equals(username)){
+                    while (!endReached){
+                        nxtItem = file.next();
+                        if (nxtItem.equals("END"))
+                            endReached = true;
+                    }
+                }
+            }
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Remove a deleted post ID from UserLikes.txt and TaggedPost.txt files.
      * @param ID ID that was deleted from post repo
      */
@@ -421,8 +597,7 @@ public class FileUpdater {
             file = new FileWriter("UserInfo.txt", true);
             out = new BufferedWriter(file);
             out.newLine();
-            out.write(newUser.getUsername() + " " + newUser.getGender() +
-                    " " + newUser.getAge() + " " + newUser.getUserBio());
+            out.write(newUser.toString());
             out.close();
 
             // Insert new user into UserLikes.txt
@@ -460,7 +635,6 @@ public class FileUpdater {
             out.newLine();
             out.write("END");
             out.close();
-
         }
         catch (IOException ex){
             ex.printStackTrace();

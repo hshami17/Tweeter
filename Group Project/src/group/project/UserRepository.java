@@ -1,7 +1,9 @@
-package group.project;
 
+package group.project;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 
 public class UserRepository {
     private static ArrayList<User> userRepo;
+    public static Integer userID;
 
     /**
      * Populate the user repo with all the registered users in the system
@@ -20,10 +23,13 @@ public class UserRepository {
 
             while (file.hasNext()){
                 String username = file.next();
+                String ID = file.next();
                 String gender = file.next();
                 String age = file.next();
                 String userBio = file.nextLine();
-                add(new User(username, gender, age, userBio));
+                add(new User(username, ID, gender, age, userBio));
+                if (!file.hasNext())
+                    userID = new Integer(ID);
             }
         }
         catch (IOException ex){
@@ -82,8 +88,43 @@ public class UserRepository {
     }
 
     /**
+     * Save all users to the UserInfo.txt file
+     */
+    public static void saveAllUsers() {
+        try {
+            PrintWriter out = new PrintWriter(new FileWriter("UserInfo.txt"));
+            for (int i=0; i<userRepo.size(); i++){
+                out.println(userRepo.get(i).toString());
+            }
+            out.close();
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Search through user repo to see if an ID is taken
+     * @param ID The ID being searched for
+     * @return False if ID is not taken, true if it is
+     */
+    public static boolean IDtaken(String ID){
+        for (int i=0; i<userRepo.size(); i++){
+            if (userRepo.get(i).getUserID().equals(ID))
+                return true;
+        }
+        return false;
+    }
+
+    /**
      * Add newly registered user into the user repo
      * @param newUser The new user object being added
      */
     public static void add(User newUser) {userRepo.add(newUser);}
+
+    /**
+     * Remove user from the user repo
+     * @param username The username of the user to remove
+     */
+    public static void removeUser(String username) {userRepo.remove(search(username));}
 }
