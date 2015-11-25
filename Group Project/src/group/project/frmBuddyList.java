@@ -136,62 +136,50 @@ public class frmBuddyList {
             }
         }
     }
+        
+    public void addBuddyComponents(User u){
 
-    /**
-    private static void addBuddyComponents(){
-        //Set initial state of follow button
+        // Set initial state of follow button
         Button btnFollow = new Button();
-        if(){
+        ArrayList<User> f = Profile.getFollowings();
+        if (f.contains(u))
             btnFollow.setText("Unfollow");
-        }
-        else{
+        else
             btnFollow.setText("Follow");
-        }
         
-        btnFollow.setTranslateX(55);
-        
+        // Execute appropriate action depending on state of follow button
         btnFollow.setOnAction(event -> {
-            if(btnFollow.getText().equals("Unfollow")){
-                ConfirmBox.display("Unfollow User", "Are you sure you no longer want to"
-                        + " subscribe to this user?", 300, 110);
-                if(ConfirmBox.result){
-                    
-                }
-                else if(rbFollowers.isSelected()){
-                    
-                }
-                else if(rbFollowing.isSelected()){
+            if (btnFollow.getText().equals("Follow")) {
+                FileUpdater.addToFollowersFile(this);
+                btnFollow.setText("Unlike");
                 
-                }
-            }
-        });
-        
-        btnFollow.setOnAction(event -> {
-            if(){
-                btnFollow.setText("Unfollow");
-            }
+            } 
             else{
+                
                 btnFollow.setText("Follow");
+                
             }
         });
-        
-        
-        btnFollow.setFont(Font.font("Helvetica", 15));
-        btnFollow.setTranslateY(20);
+        btnFollow.defaultButtonProperty().bind(btnFollow.focusedProperty());
+        btnFollow.setFont(Font.font("Helvetica", 13 ));
+        btnFollow.setTranslateY(17);
+
         center.getChildren().addAll(btnFollow);
-        
-        Line divider = new Line(0, 100, 435, 100);
+
+        // Create line to divide buddies
+        Line divider = new Line(0, 100, 425, 100);
         divider.setTranslateY(-10);
         divider.setStroke(Color.LIGHTGRAY);
         center.getChildren().add(divider);
-        
+
         // Set center pane alignment and color
-        centerPane.setAlignment(Pos.TOP_CENTER);
-        centerPane.setStyle("-fx-background-color: #EFF2FB");
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.setContent(center);
-        borderPane.setCenter(scroll);
-    
+        center.setAlignment(Pos.TOP_LEFT);
+        center.setStyle("-fx-background-color: #EFF2FB");
+        // Put the VBox onto the scroll pane and add to the border pane
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+        scroll.setContent(center);
+        border.setCenter(scroll);
     }
-     */
+    
+     
 }
