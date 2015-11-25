@@ -131,10 +131,10 @@ public class FileUpdater {
 
     /**
      * Add new username to the user who was followed into Followers.txt.
-     * @param username User who was followed
-     * @param follower New follower for the selected user
+     * @param followedUser User who was followed
+     * @param ID ID of new follower for the selected user
      */
-    public static void addToFollowersFile(String username, String follower){
+    public static void addToFollowersFile(String followedUser, String ID){
         try {
             // Open the followers file
             Scanner file = new Scanner(new File("Followers.txt"));
@@ -147,9 +147,9 @@ public class FileUpdater {
                 nxtItem = file.next();
                 writer.println(nxtItem);
 
-                // Print the follower when user found
-                if (nxtItem.equals(username)) {
-                    writer.println(follower);
+                // Print the follower ID when user found
+                if (nxtItem.equals(followedUser)) {
+                    writer.println(ID);
                     foundUser = true;
                 }
 
@@ -172,9 +172,9 @@ public class FileUpdater {
     /**
      * Add new user being followed into Following.txt file.
      * @param username User who followed new user
-     * @param following User who was selected to follow
+     * @param ID ID of user who was selected to follow
      */
-    public static void addToFollowingFile(String username, String following){
+    public static void addToFollowingFile(String username, String ID){
         try {
             // Open the following file
             Scanner file = new Scanner(new File("Following.txt"));
@@ -187,10 +187,10 @@ public class FileUpdater {
                 nxtItem = file.next();
                 writer.println(nxtItem);
 
-                // Print the new follower when user found
+                // Print the new user ID being followed when user found
                 if (nxtItem.equals(username)) {
                     foundUser = true;
-                    writer.println(following);
+                    writer.println(ID);
                 }
             }
 
@@ -210,10 +210,10 @@ public class FileUpdater {
 
     /**
      * Remove user from following list of a user from Follower.txt file.
-     * @param username User who un-followed a user
-     * @param follower User who was un-followed
+     * @param ID ID of user who un-followed a user
+     * @param username User who was un-followed
      */
-    public static void removeFromFollowersFile(String username, String follower) {
+    public static void removeFromFollowersFile(String ID, String username) {
         try {
             // Open the followers file
             Scanner file = new Scanner(new File("Followers.txt"));
@@ -225,7 +225,7 @@ public class FileUpdater {
 
             boolean foundUser = false;
 
-            // Keep reading file until user is found
+            // Keep reading file until user ID is found
             while (!foundUser && file.hasNext()) {
                 nxtItem = file.next();
                 writer.println(nxtItem);
@@ -233,11 +233,11 @@ public class FileUpdater {
                     foundUser = true;
             }
 
-            // Find the follower to remove
+            // Find the follower ID to remove
             while (!foundFollower && file.hasNext()) {
                 nxtItem = file.next();
 
-                if (nxtItem.equals(follower))
+                if (nxtItem.equals(ID))
                     foundFollower = true;
                 else
                     writer.println(nxtItem);
@@ -259,9 +259,9 @@ public class FileUpdater {
     /**
      * Remove user a users following list in Following.txt file.
      * @param username User who un-followed selected user
-     * @param following User who was un-followed
+     * @param ID User who was un-followed
      */
-    public static void removeFromFollowingFile(String username, String following) {
+    public static void removeFromFollowingFile(String username, String ID) {
         try {
             // Open the following file
             Scanner file = new Scanner(new File("Following.txt"));
@@ -282,11 +282,11 @@ public class FileUpdater {
                     foundUser = true;
             }
 
-            // Find the following user to remove
+            // Find the following user ID to remove
             while (!foundFollowing && file.hasNext()) {
                 nxtItem = file.next();
 
-                if (nxtItem.equals(following))
+                if (nxtItem.equals(ID))
                     foundFollowing = true;
                 else
                     writer.println(nxtItem);
@@ -297,6 +297,7 @@ public class FileUpdater {
 
             writer.close();
 
+            // Transfer new info into the following file
             transferFileContent("temp.txt", "Following.txt");
         }
         catch (IOException ex){
@@ -457,23 +458,151 @@ public class FileUpdater {
      */
     public static void deleteUserFromFiles(String username){
         try {
-            // Open user likes file
+            // Delete from user likes file
             Scanner file = new Scanner(new File("UserLikes.txt"));
             PrintWriter writer = new PrintWriter("temp.txt");
-            boolean endReached = false;
             String nxtItem;
 
-            while (file.hasNext() && !endReached){
+            while (file.hasNext()){
                 nxtItem = file.next();
 
+                // Check if user found
                 if (nxtItem.equals(username)){
+                    boolean endReached = false;
                     while (!endReached){
                         nxtItem = file.next();
+                        // Keep reading lines until end reached
+                        if (nxtItem.equals("END"))
+                            endReached = true;
+                        // If not end, then decrement liked post likes
+                        else{
+                            Post post = PostRepository.getPost(PostRepository.search(nxtItem));
+                            post.setLikeCount(post.getLikeCount() - 1);
+                            PostRepository.saveAllPosts();
+                        }
+                    }
+                }
+                // Write line if not username
+                else
+                    writer.println(nxtItem);
+            }
+            writer.close();
+            transferFileContent("temp.txt", "UserLikes.txt");
+
+            // Delete from tagged post files
+            file = new Scanner(new File("TaggedPost.txt"));
+            writer = new PrintWriter("temp.txt");
+
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                // Check if user found
+                if (nxtItem.equals(username)){
+                    boolean endReached = false;
+                    while (!endReached){
+                        nxtItem = file.next();
+                        // Keep reading lines until end reached
                         if (nxtItem.equals("END"))
                             endReached = true;
                     }
                 }
+                else
+                    writer.println(nxtItem);
             }
+            writer.close();
+            transferFileContent("temp.txt", "TaggedPost.txt");
+
+            // Delete from followers file
+            file = new Scanner(new File("Followers.txt"));
+            writer = new PrintWriter("temp.txt");
+
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                // Check if user found
+                if (nxtItem.equals(username)){
+                    boolean endReached = false;
+                    while (!endReached){
+                        nxtItem = file.next();
+                        // Keep reading lines until end reached
+                        if (nxtItem.equals("END"))
+                            endReached = true;
+                        else {
+                            // PUT REMOVE FOLLOWER CODE HERE
+                        }
+                    }
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            writer.close();
+            transferFileContent("temp.txt", "Followers.txt");
+
+            // Delete from following file
+            file = new Scanner(new File("Following.txt"));
+            writer = new PrintWriter("temp.txt");
+
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                // Check if user found
+                if (nxtItem.equals(username)){
+                    boolean endReached = false;
+                    while (!endReached){
+                        nxtItem = file.next();
+                        // Keep reading lines until end reached
+                        if (nxtItem.equals("END"))
+                            endReached = true;
+                        else {
+                            // PUT REMOVE FOLLOWING CODE HERE
+                        }
+                    }
+                }
+                else
+                    writer.println(nxtItem);
+            }
+            writer.close();
+            transferFileContent("temp.txt", "Following.txt");
+
+            // Delete from login info file
+            file = new Scanner(new File("LoginInfo.txt"));
+            writer = new PrintWriter("temp.txt");
+
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                if (nxtItem.equals(username)) {
+                    String skip = file.next();
+                }
+                else
+                    writer.println(nxtItem + " " + file.next());
+            }
+            writer.close();
+            transferFileContent("temp.txt", "LoginInfo.txt");
+
+            // Delete all their posts from the post file
+            file = new Scanner(new File("Post.txt"));
+            writer = new PrintWriter("temp.txt");
+
+            while (file.hasNext()){
+                nxtItem = file.next();
+
+                // If post authored by deleted user, skip write of their post
+                if (nxtItem.equals(username)) {
+                    file.next();
+                    file.next();
+                    file.next();
+                    file.nextLine();
+                }
+                else{
+                    writer.println(nxtItem + " " + file.next() + " " + file.next() + " " +
+                            file.next() + " " + file.nextLine());
+                }
+            }
+            writer.close();
+            // Transfer info to post file and reset post repo
+            transferFileContent("temp.txt", "Post.txt");
+            PostRepository.populatePostRepository();
         }
         catch (IOException ex){
             ex.printStackTrace();
