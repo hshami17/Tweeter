@@ -11,7 +11,7 @@ public class Profile {
     public static String password;
     private static ArrayList<Post> likedPosts = new ArrayList<>();
     private static ArrayList<Post> taggedPosts = new ArrayList<>();
-    private static ArrayList<User> followings = new ArrayList<>();
+    private static ArrayList<User> following = new ArrayList<>();
     private static ArrayList<User> followers = new ArrayList<>();
 
     /**
@@ -21,7 +21,7 @@ public class Profile {
         username = "";
         likedPosts = new ArrayList<>();
         taggedPosts = new ArrayList<>();
-        followings = new ArrayList<>();
+        following = new ArrayList<>();
         followers = new ArrayList<>();
     }
 
@@ -186,6 +186,10 @@ public class Profile {
      */
     public static int taggedPostSize() {return taggedPosts.size();}
 
+    public static int followingSize() {return following.size();}
+
+    public static int followersSize() {return followers.size();}
+
     /**
      * Get a tagged post at a specified index
      * @param index The index to get the post from in the list
@@ -205,6 +209,11 @@ public class Profile {
             return false;
     }
 
+    public static User getFollowing(int index) {return following.get(index);}
+
+    public static User getFollower(int index) {return followers.get(index);}
+
+
     /**
      * Search through the user's liked post list
      * @param ID The post ID being used as the search key
@@ -218,25 +227,43 @@ public class Profile {
         }
         return -1;
     }
+
+    public static int searchFollowers(String ID){
+        for (int i=0; i<followers.size(); i++){
+            if (followers.get(i).getUserID().equals(ID))
+                return i;
+        }
+        return -1;
+    }
+
+    public static int searchFollowing(String ID){
+        for (int i=0; i<following.size(); i++){
+            if (following.get(i).getUserID().equals(ID))
+                return i;
+        }
+        return -1;
+    }
     
     public static void addFollower(User follower){
         followers.add(follower);
-        FileUpdater.addToFollowersFile(username, follower.getUsername());
+        FileUpdater.addToFollowersFile(follower.getUsername(), UserRepository.getUser(username).getUserID());
     }
     
     public static void addFollowing(User follow){
-        followings.add(follow);
-        FileUpdater.addToFollowingFile(username, follow.getUsername());
+        following.add(follow);
+        FileUpdater.addToFollowingFile(username, follow.getUserID());
+        FileUpdater.addToFollowersFile(follow.getUsername(), UserRepository.getUser(username).getUserID());
     }
     
-    public static void removeFollower(String follower){
-        //followers.remove(searchFollowerList(username));
-        FileUpdater.removeFromFollowersFile(username, follower);
+    public static void removeFollower(User follower){
+        followers.remove(searchFollowers(follower.getUserID()));
+        FileUpdater.removeFromFollowersFile(username, UserRepository.getUser(username).getUserID());
     }
     
-    public static void removeFollowing(String following){
-        //followings.remove(searchFollowingList(username));
-        FileUpdater.removeFromFollowingFile(username, following);
+    public static void removeFollowing(User followingUser){
+        following.remove(searchFollowing(followingUser.getUserID()));
+        FileUpdater.removeFromFollowingFile(username, followingUser.getUserID());
+        FileUpdater.removeFromFollowersFile(followingUser.getUsername(), UserRepository.getUser(username).getUserID());
     }
     
     public static void retrieveFollowers(){
@@ -257,15 +284,11 @@ public class Profile {
                         nxtLine = file.next();
                         // Keep reading all followers until END line is read
                         while (!nxtLine.equals("END")) {
-                            // Search and get the liked post from ID read and add to users liked posts
-                            if (UserRepository.search(nxtLine) != -1) {
-                                User follower = UserRepository.getUser(nxtLine);
-                                followers.add(follower);
-                            }
+                            User userFollower = UserRepository.getUserByID(nxtLine);
+                            followers.add(userFollower);
                             // Read the next line
                             nxtLine = file.next();
                         }
-
                     } else {
                         while (!nxtLine.equals("END")) {
                             nxtLine = file.next();
@@ -278,7 +301,8 @@ public class Profile {
             ex.printStackTrace();
         }
     }
-    
+
+
     public static void retrieveFollowing(){
         try {
             if (PostRepository.getRepoSize() != 0) {
@@ -290,6 +314,7 @@ public class Profile {
                 while (!found && file.hasNext()) {
                     // Get the next line
                     String nxtLine = file.next();
+
                     // Check if it equals to the current user username
                     if (nxtLine.equals(username)) {
                         found = true;
@@ -297,15 +322,11 @@ public class Profile {
                         nxtLine = file.next();
                         // Keep reading all liked post IDs until END line is read
                         while (!nxtLine.equals("END")) {
-                            // Search and get the liked post from ID read and add to users liked posts
-                            if (UserRepository.search(nxtLine) != -1) {
-                                User following = UserRepository.getUser(nxtLine);
-                                followings.add(following);
-                            }
+                            User userFollowing = UserRepository.getUserByID(nxtLine);
+                            following.add(userFollowing);
                             // Read the next line
                             nxtLine = file.next();
                         }
-
                     } else {
                         while (!nxtLine.equals("END")) {
                             nxtLine = file.next();
@@ -318,13 +339,15 @@ public class Profile {
             ex.printStackTrace();
         }
     }
-    
-    public static ArrayList<User> getFollowers(){
-        return followers;
-    }
-    
-    public static ArrayList<User> getFollowings(){
-        return followings;
+
+
+    public static boolean isFollowing(String username){
+        for (int i=0; i<following.size(); i++){
+            if (following.get(i).getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
     }
     
 }

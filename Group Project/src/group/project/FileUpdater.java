@@ -213,7 +213,7 @@ public class FileUpdater {
      * @param ID ID of user who un-followed a user
      * @param username User who was un-followed
      */
-    public static void removeFromFollowersFile(String ID, String username) {
+    public static void removeFromFollowersFile(String username, String ID) {
         try {
             // Open the followers file
             Scanner file = new Scanner(new File("Followers.txt"));

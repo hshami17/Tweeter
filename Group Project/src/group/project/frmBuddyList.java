@@ -2,8 +2,6 @@ package group.project;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -15,23 +13,14 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
-import javax.swing.event.ChangeListener;
-import java.io.*;
-import java.util.*;
-
-/**
- *
- * @author Bethany
- */
 public class frmBuddyList {
-    
 
-    private static BorderPane border;
+    private static BorderPane borderPane;
     private static RadioButton rbFollowers;
     private static RadioButton rbFollowing;
-    private static ScrollPane scroll;
-    private static VBox center;
-    
+    private static ScrollPane scrollPane;
+    private static VBox centerPane;
+
     public static void display(){
     
         // Create new window
@@ -43,7 +32,7 @@ public class frmBuddyList {
         window.initModality(Modality.APPLICATION_MODAL);
     
         // Declare all the layouts
-        border = new BorderPane();
+        borderPane = new BorderPane();
         HBox topPane = new HBox(10);
         topPane.setStyle("-fx-background-color: #BF9393");
         topPane.setPadding(new Insets(5, 5, 15, 0));
@@ -52,8 +41,8 @@ public class frmBuddyList {
         bottomPane.setPadding(new Insets(3, 3, 15, 0));
         
         // Set the top pane
-        border.setTop(topPane);
-        border.setBottom(bottomPane);
+        borderPane.setTop(topPane);
+        borderPane.setBottom(bottomPane);
         
         // Create the followers and following radio buttons
         ToggleGroup group = new ToggleGroup();
@@ -70,6 +59,8 @@ public class frmBuddyList {
         rbFollowing.setFont(Font.font("Helvetica", FontWeight.BOLD, 13));
         rbFollowing.setTranslateX(10);
         rbFollowing.setTranslateY(5);
+
+        getFollowers();
         
         // Create button to close buddy list window
         Button btnHome = new Button("Back to Home");
@@ -88,98 +79,96 @@ public class frmBuddyList {
         bottomPane.setAlignment(Pos.BOTTOM_RIGHT);
         
         // Create the scene and display the home page window
-        Scene scene = new Scene(border, 300, 400);
+        Scene scene = new Scene(borderPane, 450, 450);
         window.setScene(scene);
         window.showAndWait();
         
     }
-    
+
+
     public static void getFollowers(){
         //Select followers radio button
         rbFollowers.setSelected(true);
-        //Create the layouts and set padding
-        center = new VBox(6);
-        scroll = new ScrollPane();
-        center.setPadding(new Insets(5, 5, 5, 5));
+        centerPane = new VBox(6);
+        scrollPane = new ScrollPane();
+        centerPane.setPadding(new Insets(5, 5, 5, 5));
+        centerPane.setStyle("-fx-background-color: #EFF2FB");
         if(UserRepository.getRepoSize() != 0){
-            ArrayList<User> f = Profile.getFollowers();
-            for(int i = 0; i < f.size(); i++){
-                //if(!addFollowing.isFollower()){
-                    Text person = new Text(f.get(i).getUsername().trim());
-                    person.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
-                    // Add items to center pane
-                    center.getChildren().addAll(person);
-                    // Add post interaction buttons
-                    //addBuddyComponents(addFollowers);
-                //}
-            
+            for(int i=0; i < Profile.followersSize(); i++){
+                User user = Profile.getFollower(i);
+
+                Text person = new Text(user.getUsername().trim());
+                person.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
+
+                // Add items to center pane
+                centerPane.getChildren().add(person);
+
+                addBuddyComponents(user);
             }
+
+            VBox.setVgrow(scrollPane, Priority.ALWAYS);
+            scrollPane.setContent(centerPane);
+            borderPane.setCenter(scrollPane);
         }
+        else
+            borderPane.setCenter(centerPane);
     }
+
     
     public static void getFollowing(){
         rbFollowing.setSelected(true);
-        center = new VBox(6);
-        scroll = new ScrollPane();
-        center.setPadding(new Insets(5, 5, 5, 5));
+        centerPane = new VBox(6);
+        scrollPane = new ScrollPane();
+        centerPane.setPadding(new Insets(5, 5, 5, 5));
+        centerPane.setStyle("-fx-background-color: #EFF2FB");
         if(UserRepository.getRepoSize() != 0){
-            ArrayList<User> f = Profile.getFollowings();
-            for(int i = 0; i < f.size(); i++){
-                //if(!addFollowing.isFollower()){
-                    Text person = new Text(f.get(i).getUsername().trim());
-                    person.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
-                    // Add items to center pane
-                    center.getChildren().addAll(person);
-                    // Add post interaction buttons
-                    //addBuddyComponents(addFollowing);
-                //}
-            }
-        }
-    }
-        
-    public void addBuddyComponents(User u){
+            for(int i=0; i < Profile.followingSize(); i++){
+                User user = Profile.getFollowing(i);
 
-        // Set initial state of follow button
-        Button btnFollow = new Button();
-        ArrayList<User> f = Profile.getFollowings();
-        if (f.contains(u))
-            btnFollow.setText("Unfollow");
+                Text person = new Text(user.getUsername().trim());
+                person.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
+
+                // Add items to center pane
+                centerPane.getChildren().add(person);
+
+                addBuddyComponents(user);
+            }
+
+            VBox.setVgrow(scrollPane, Priority.ALWAYS);
+            scrollPane.setContent(centerPane);
+            borderPane.setCenter(scrollPane);
+        }
         else
-            btnFollow.setText("Follow");
-        
+            borderPane.setCenter(centerPane);
+    }
+
+
+    public static void addBuddyComponents(User user){
+        // Set initial state of follow button
+        Button btnFollowUnfollow= new Button();
+        if (Profile.isFollowing(user.getUsername()))
+            btnFollowUnfollow.setText("Unfollow");
+        else
+            btnFollowUnfollow.setText("Follow");
+
         // Execute appropriate action depending on state of follow button
-        btnFollow.setOnAction(event -> {
-            if (btnFollow.getText().equals("Follow")) {
-                FileUpdater.addToFollowersFile(this);
-                btnFollow.setText("Unlike");
-                
-            } 
-            else{
-                
-                btnFollow.setText("Follow");
-                
+        btnFollowUnfollow.setOnAction(event -> {
+            if (btnFollowUnfollow.getText().equals("Follow")) {
+                Profile.addFollowing(user);
+                btnFollowUnfollow.setText("Unfollow");
+            } else {
+                Profile.removeFollowing(user);
+                btnFollowUnfollow.setText("Follow");
             }
         });
-        btnFollow.defaultButtonProperty().bind(btnFollow.focusedProperty());
-        btnFollow.setFont(Font.font("Helvetica", 13 ));
-        btnFollow.setTranslateY(17);
+        btnFollowUnfollow.defaultButtonProperty().bind(btnFollowUnfollow.focusedProperty());
+        btnFollowUnfollow.setFont(Font.font("Helvetica", 12));
 
-        center.getChildren().addAll(btnFollow);
-
-        // Create line to divide buddies
-        Line divider = new Line(0, 100, 425, 100);
-        divider.setTranslateY(-10);
+        // Create line to divide posts
+        Line divider = new Line(0, 100, 421, 100);
         divider.setStroke(Color.LIGHTGRAY);
-        center.getChildren().add(divider);
 
-        // Set center pane alignment and color
-        center.setAlignment(Pos.TOP_LEFT);
-        center.setStyle("-fx-background-color: #EFF2FB");
-        // Put the VBox onto the scroll pane and add to the border pane
-        VBox.setVgrow(scroll, Priority.ALWAYS);
-        scroll.setContent(center);
-        border.setCenter(scroll);
+        centerPane.getChildren().addAll(btnFollowUnfollow, divider);
     }
-    
-     
 }
+

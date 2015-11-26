@@ -142,8 +142,13 @@ public class Post {
         // Set initial state of follow/delete button
         if (author.trim().equals(Profile.username))
             btnFollowDelete.setText("Delete");
-        else
-            btnFollowDelete.setText("Follow");
+        else {
+            if (Profile.isFollowing(author)){
+                btnFollowDelete.setText("Unfollow");
+            }
+            else
+                btnFollowDelete.setText("Follow");
+        }
         // Set the X position of the follow/delete button
         if (btnLikeUpdate.getText().equals("Like"))
             btnFollowDelete.setTranslateX(52);
@@ -170,6 +175,14 @@ public class Post {
                         frmHashTagSearch.getHashTagPosts();
                     }
                 }
+            }
+            else if (btnFollowDelete.getText().equals("Follow")){
+                Profile.addFollowing(UserRepository.getUser(author));
+                btnFollowDelete.setText("Unfollow");
+            }
+            else if (btnFollowDelete.getText().equals("Unfollow")){
+                Profile.removeFollowing(UserRepository.getUser(author));
+                btnFollowDelete.setText("Follow");
             }
         });
         btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());

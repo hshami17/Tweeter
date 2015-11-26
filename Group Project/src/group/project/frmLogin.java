@@ -122,6 +122,8 @@ public class frmLogin extends Application {
                     Profile.password = txtPassword.getText().trim();
                     Profile.retrieveLikes();
                     Profile.retrieveTaggedPosts();
+                    Profile.retrieveFollowers();
+                    Profile.retrieveFollowing();
                     exploreMode = false;
                     frmHomePage.display();
                 } else

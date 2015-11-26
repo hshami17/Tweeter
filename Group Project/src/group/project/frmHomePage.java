@@ -15,6 +15,8 @@ public class frmHomePage {
     public static Stage window;
     private static BorderPane borderPane;
     private static VBox centerPane;
+    private static HBox topPane;
+    private static VBox leftPane;
     private static ScrollPane scrollPane;
     public static RadioButton rbPublic;
     public static RadioButton rbPrivate;
@@ -40,10 +42,10 @@ public class frmHomePage {
 
         // Declare all the layouts
         borderPane = new BorderPane();
-        VBox leftPane = new VBox(7);
+        leftPane = new VBox(7);
         leftPane.setStyle("-fx-background-color: #A0D2F7");
         leftPane.setPadding(new Insets(5, 17, 0, 3));
-        HBox topPane = new HBox(10);
+        topPane = new HBox(10);
         topPane.setStyle("-fx-background-color: #BF9393");
         topPane.setPadding(new Insets(3, 3, 15, 0));
 
@@ -99,7 +101,13 @@ public class frmHomePage {
 
         // Create a buddy list button to open a window containing your followers and following
         Button btnBuddyList = new Button("Buddy List");
-        btnBuddyList.setOnAction(event -> frmBuddyList.display());
+        btnBuddyList.setOnAction(event -> {
+            frmBuddyList.display();
+            if (rbPublic.isSelected())
+                getAllPublicPosts();
+            else
+                getAllPrivatePosts();
+        });
         btnBuddyList.defaultButtonProperty().bind(btnBuddyList.focusedProperty());
         btnBuddyList.setFont(Font.font("Helvetica", 15));
         btnBuddyList.setTranslateX(7);
@@ -123,21 +131,22 @@ public class frmHomePage {
         // Create the public and private feed radio buttons
         ToggleGroup group = new ToggleGroup();
         rbPublic = new RadioButton("Public Feed");
-        rbPublic.setOnAction(event -> getAllPublicPosts());
         rbPublic.setToggleGroup(group);
         rbPublic.setFont(Font.font("Helvetica", FontWeight.BOLD, 13));
         rbPublic.setTranslateX(-17);
         rbPublic.setTranslateY(20);
+        rbPublic.focusedProperty().addListener(observable -> {
+            getAllPublicPosts();
+        });
 
         rbPrivate = new RadioButton("Private Feed");
-        rbPrivate.setOnAction(event -> getAllPrivatePosts());
         rbPrivate.setToggleGroup(group);
         rbPrivate.setFont(Font.font("Helvetica", FontWeight.BOLD, 13));
         rbPrivate.setTranslateX(-12);
         rbPrivate.setTranslateY(20);
-
-        // Retrieve all of the public posts to the feed
-        getAllPublicPosts();
+        rbPrivate.focusedProperty().addListener(observable -> {
+            getAllPrivatePosts();
+        });
 
         // Create Tweeter text
         Text txtTweeter = new Text("Tweeter");
@@ -193,9 +202,12 @@ public class frmHomePage {
                 btnSearchByHashTag, btnFindBuddy, btnBuddyList);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
+        // Retrieve all of the public posts to the feed
+        getAllPublicPosts();
+
         // Set the left and top pane
-        borderPane.setLeft(leftPane);
         borderPane.setTop(topPane);
+        borderPane.setLeft(leftPane);
 
         // Create the scene and display the home page window
         Scene scene = new Scene(borderPane, 600, 670);
@@ -272,19 +284,21 @@ public class frmHomePage {
             for (int i = PostRepository.getRepoSize() - 1; i >= 0; i--) {
                 Post addPost = PostRepository.getPost(i);
                 if (!addPost.isPublic()) {
-                    // Get the post author
-                    Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
-                    txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
+                    if (Profile.isFollowing(addPost.getAuthor()) || Profile.username.equals(addPost.getAuthor())) {
+                        // Get the post author
+                        Text txtAuthor = new Text("@" + addPost.getAuthor().trim());
+                        txtAuthor.setFont(Font.font("Helvetica", FontWeight.BOLD, 17));
 
-                    // Get the post
-                    Text txtPost = new Text(addPost.getMessage().trim());
-                    txtPost.setFont(Font.font("Helvetica", 17));
-                    txtPost.setWrappingWidth(400);
+                        // Get the post
+                        Text txtPost = new Text(addPost.getMessage().trim());
+                        txtPost.setFont(Font.font("Helvetica", 17));
+                        txtPost.setWrappingWidth(400);
 
-                    // Add items to the center pane
-                    centerPane.getChildren().addAll(txtAuthor, txtPost);
-                    // Add post interaction buttons
-                    addPost.addPostComponents(centerPane, scrollPane, borderPane, "Home");
+                        // Add items to the center pane
+                        centerPane.getChildren().addAll(txtAuthor, txtPost);
+                        // Add post interaction buttons
+                        addPost.addPostComponents(centerPane, scrollPane, borderPane, "Home");
+                    }
                 }
             }
             if (centerPane.getChildren().isEmpty()) {

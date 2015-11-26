@@ -1,6 +1,7 @@
-hshami 1 Public 2                                         First post on Tweeter!! #First
-sshami 2 Public 1                                       Hello there Tweeter
-Tanisha 3 Public 1                                       Tweeter is awesome
-gfring 4 Public 0                                   I love #LosPollos
-hshami 5 Public 2                          Hey @gfring
-hshami 7 Public 1               hey @sshami2
+hshami 1 Public 2                                          First post on Tweeter!! #First
+sshami 2 Public 1                                        Hello there Tweeter
+Tanisha 3 Public 1                                        Tweeter is awesome
+gfring 4 Public 0                                    I love #LosPollos
+hshami 5 Public 2                           Hey @gfring
+hshami 7 Public 1                hey @sshami2
+gfring 8 Private 0 A post to all of my followers
