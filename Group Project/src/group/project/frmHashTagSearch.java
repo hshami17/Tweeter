@@ -111,7 +111,7 @@ public class frmHashTagSearch {
                 txtPost.setWrappingWidth(400);
 
                 centerPane.getChildren().addAll(txtAuthor, txtPost);
-                post.addPostComponents(centerPane, scrollPane, borderPane, "HashTag Posts");
+                post.addPostComponents(centerPane, scrollPane, borderPane, txtPost, "HashTag Posts");
             }
         }
         displayPosts();

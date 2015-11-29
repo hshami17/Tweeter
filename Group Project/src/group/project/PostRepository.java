@@ -56,6 +56,7 @@ public class PostRepository {
     public static void deletePost(Post removePost){
         // Delete post from index returned by search
         postRepo.remove(search(removePost.getMsg_ID()));
+        PostRepository.saveAllPosts();
     }
 
     /**

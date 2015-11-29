@@ -1,5 +1,5 @@
-
 package group.project;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class UserRepository {
     private static ArrayList<User> userRepo;
-    public static Integer userID;
+    public static Integer userID = 0;
 
     /**
      * Populate the user repo with all the registered users in the system
@@ -73,6 +73,15 @@ public class UserRepository {
      * @return The user object from the specified index
      */
     public static User getUser(int index) {return userRepo.get(index);}
+
+    public static User getUserByID(String ID){
+        for (int i=0; i<userRepo.size(); i++){
+            if (userRepo.get(i).getUserID().equals(ID)){
+                return userRepo.get(i);
+            }
+        }
+        return new User();
+    }
 
     /**
      * Get the current size of the user repo

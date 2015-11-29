@@ -213,7 +213,7 @@ public class FileUpdater {
      * @param ID ID of user who un-followed a user
      * @param username User who was un-followed
      */
-    public static void removeFromFollowersFile(String ID, String username) {
+    public static void removeFromFollowersFile(String username, String ID) {
         try {
             // Open the followers file
             Scanner file = new Scanner(new File("Followers.txt"));
@@ -456,7 +456,7 @@ public class FileUpdater {
      * Delete user from all files
      * @param username Username of the user to remove
      */
-    public static void deleteUserFromFiles(String username){
+    public static void deleteUserFromFiles(String username, String userID){
         try {
             // Delete from user likes file
             Scanner file = new Scanner(new File("UserLikes.txt"));
@@ -519,17 +519,16 @@ public class FileUpdater {
             while (file.hasNext()){
                 nxtItem = file.next();
 
+                // Skip write if user ID found
+                if (nxtItem.equals(userID)){}
                 // Check if user found
-                if (nxtItem.equals(username)){
+                else if (nxtItem.equals(username)){
                     boolean endReached = false;
                     while (!endReached){
                         nxtItem = file.next();
                         // Keep reading lines until end reached
                         if (nxtItem.equals("END"))
                             endReached = true;
-                        else {
-                            // PUT REMOVE FOLLOWER CODE HERE
-                        }
                     }
                 }
                 else
@@ -545,17 +544,16 @@ public class FileUpdater {
             while (file.hasNext()){
                 nxtItem = file.next();
 
+                // Skip write if user ID found
+                if (nxtItem.equals(userID)) {}
                 // Check if user found
-                if (nxtItem.equals(username)){
+                else if (nxtItem.equals(username)){
                     boolean endReached = false;
                     while (!endReached){
                         nxtItem = file.next();
                         // Keep reading lines until end reached
                         if (nxtItem.equals("END"))
                             endReached = true;
-                        else {
-                            // PUT REMOVE FOLLOWING CODE HERE
-                        }
                     }
                 }
                 else

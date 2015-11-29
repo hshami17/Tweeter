@@ -126,7 +126,7 @@ public class Post {
      * @param form The window in which the posts are being printed
      */
     public void addPostComponents(VBox centerPane, ScrollPane scrollPane,
-                                  BorderPane borderPane, String form){
+                                  BorderPane borderPane, Text post, String form){
         // Create text to display likes
         Text txtLikes = new Text();
 
@@ -138,46 +138,54 @@ public class Post {
             btnLikeUpdate.setText("Like");
 
         // Create button to display follow or delete
-        Button btnFollowDelete = new Button();
+        Button btnViewProfileDelete = new Button();
         // Set initial state of follow/delete button
         if (author.trim().equals(Profile.username))
-            btnFollowDelete.setText("Delete");
-        else
-            btnFollowDelete.setText("Follow");
+            btnViewProfileDelete.setText("Edit");
+        else {
+            btnViewProfileDelete.setText("View Profile");
+        }
         // Set the X position of the follow/delete button
         if (btnLikeUpdate.getText().equals("Like"))
-            btnFollowDelete.setTranslateX(52);
+            btnViewProfileDelete.setTranslateX(52);
         else
-            btnFollowDelete.setTranslateX(65);
+            btnViewProfileDelete.setTranslateX(65);
 
 
         // Execute appropriate action depending on button state
-        btnFollowDelete.setOnAction(event -> {
-            if (btnFollowDelete.getText().equals("Delete")) {
-                ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
-                if (ConfirmBox.result) {
-                    PostRepository.deletePost(this);
-                    PostRepository.saveAllPosts();
-                    FileUpdater.removePostID(Msg_ID);
-                    if (form.equals("Home")) {
-                        if (frmHomePage.rbPublic.isSelected())
-                            frmHomePage.getAllPublicPosts();
-                        else
-                            frmHomePage.getAllPrivatePosts();
-                    } else if (form.equals("Tagged Posts")) {
-                        frmTaggedPosts.getAllTaggedPosts();
-                    } else if (form.equals("HashTag Posts")) {
-                        frmHashTagSearch.getHashTagPosts();
-                    }
+        btnViewProfileDelete.setOnAction(event -> {
+            if (btnViewProfileDelete.getText().equals("Edit")) {
+                frmPost.editMode = true;
+                frmPost.editPost = this;
+                frmPost.form = form;
+                frmPost.display();
+                if (!frmPost.deleted){
+                    post.setText(message.trim());
+                }
+                else {
+                     if (form.equals("Home")) {
+                     if (frmHomePage.rbPublic.isSelected())
+                     frmHomePage.getAllPublicPosts();
+                     else frmHomePage.getAllPrivatePosts();
+                     }
+                     else if (form.equals("Tagged Posts")) {
+                     frmTaggedPosts.getAllTaggedPosts();
+                     }
+                     else if (form.equals("HashTag Posts")) {
+                     frmHashTagSearch.getHashTagPosts();
+                     }
                 }
             }
+            else if (btnViewProfileDelete.getText().equals("View Profile")){
+                frmUserProfile.display(UserRepository.getUser(author));
+            }
         });
-        btnFollowDelete.defaultButtonProperty().bind(btnFollowDelete.focusedProperty());
-        btnFollowDelete.setFont(Font.font("Helvetica", 13));
+        btnViewProfileDelete.defaultButtonProperty().bind(btnViewProfileDelete.focusedProperty());
+        btnViewProfileDelete.setFont(Font.font("Helvetica", 13));
         if (form.equals("Home"))
-            btnFollowDelete.setTranslateY(-14);
+            btnViewProfileDelete.setTranslateY(-14);
         else
-            btnFollowDelete.setTranslateY(-15);
+            btnViewProfileDelete.setTranslateY(-15);
 
 
         // Execute appropriate action depending on state of update like button
@@ -187,7 +195,7 @@ public class Post {
                 Profile.addLikedPost(this);
                 PostRepository.saveAllPosts();
                 btnLikeUpdate.setText("Unlike");
-                btnFollowDelete.setTranslateX(68);
+                btnViewProfileDelete.setTranslateX(68);
                 if (likeCount == 1)
                     txtLikes.setText(likeCount + " " + "like");
                 else
@@ -197,7 +205,7 @@ public class Post {
                 Profile.removeLikedPost(Msg_ID);
                 PostRepository.saveAllPosts();
                 btnLikeUpdate.setText("Like");
-                btnFollowDelete.setTranslateX(55);
+                btnViewProfileDelete.setTranslateX(55);
                 if (likeCount == 1)
                     txtLikes.setText(likeCount + " " + "like");
                 else
@@ -208,12 +216,12 @@ public class Post {
         btnLikeUpdate.setFont(Font.font("Helvetica", 13 ));
         btnLikeUpdate.setTranslateY(17);
 
-        centerPane.getChildren().addAll(btnLikeUpdate, btnFollowDelete);
+        centerPane.getChildren().addAll(btnLikeUpdate, btnViewProfileDelete);
 
         // Disable post interaction buttons if in explore mode
         if (frmLogin.exploreMode){
             btnLikeUpdate.setDisable(true);
-            btnFollowDelete.setDisable(true);
+            btnViewProfileDelete.setDisable(true);
         }
 
         // Show likes for the post

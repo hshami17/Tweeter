@@ -89,15 +89,38 @@ public class frmFindBuddies {
 
                 // Create view profile button to display user's profile
                 Button btnViewProfile = new Button("View Profile");
-                btnViewProfile.setOnAction(event -> frmUserProfile.display(user));
+                btnViewProfile.setOnAction(event -> {
+                    frmUserProfile.display(user);
+                    getAllUsers();
+                });
                 btnViewProfile.defaultButtonProperty().bind(btnViewProfile.focusedProperty());
                 btnViewProfile.setFont(Font.font("Helvetica", 12));
+
+                Button btnFollowUnfollow = new Button();
+                if (Profile.isFollowing(user.getUsername()))
+                    btnFollowUnfollow.setText("Unfollow");
+                else
+                    btnFollowUnfollow.setText("Follow");
+
+                // Execute appropriate action depending on state of follow button
+                btnFollowUnfollow.setOnAction(event -> {
+                    if (btnFollowUnfollow.getText().equals("Follow")) {
+                        Profile.addFollowing(user);
+                        btnFollowUnfollow.setText("Unfollow");
+                    } else {
+                        Profile.removeFollowing(user);
+                        btnFollowUnfollow.setText("Follow");
+                    }
+                });
+                btnFollowUnfollow.defaultButtonProperty().bind(btnFollowUnfollow.focusedProperty());
+                btnFollowUnfollow.setFont(Font.font("Helvetica", 12));
+                if (frmLogin.exploreMode) {btnFollowUnfollow.setDisable(true);}
 
                 // Create line to divide posts
                 Line divider = new Line(0, 100, 421, 100);
                 divider.setStroke(Color.LIGHTGRAY);
 
-                centerPane.getChildren().addAll(txtUsername, btnViewProfile, divider);
+                centerPane.getChildren().addAll(txtUsername, btnViewProfile, btnFollowUnfollow, divider);
             }
         }
         VBox.setVgrow(scrollPane, Priority.ALWAYS);

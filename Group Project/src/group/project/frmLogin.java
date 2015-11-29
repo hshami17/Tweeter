@@ -68,7 +68,7 @@ public class frmLogin extends Application {
 
         // Name text field
         txtUsername = new TextField();
-        txtUsername.setText("hshami");
+        //txtUsername.setText("hshami");
         txtUsername.setFont(Font.font("Helvetica", 18));
         GridPane.setConstraints(txtUsername, 1, 1);
         GridPane.setColumnSpan(txtUsername, 2);
@@ -92,7 +92,7 @@ public class frmLogin extends Application {
 
         // Password text field
         txtPassword = new PasswordField();
-        txtPassword.setText("toilet");
+        //txtPassword.setText("toilet");
         txtPassword.setFont(Font.font(18));
         GridPane.setConstraints(txtPassword, 1, 2);
         GridPane.setColumnSpan(txtPassword, 2);
@@ -122,6 +122,8 @@ public class frmLogin extends Application {
                     Profile.password = txtPassword.getText().trim();
                     Profile.retrieveLikes();
                     Profile.retrieveTaggedPosts();
+                    Profile.retrieveFollowers();
+                    Profile.retrieveFollowing();
                     exploreMode = false;
                     frmHomePage.display();
                 } else
@@ -197,8 +199,10 @@ public class frmLogin extends Application {
     private static boolean validateUserInfo() throws FileNotFoundException{
         Scanner file = new Scanner(new File("LoginInfo.txt"));
         while(file.hasNext()){
-            if((txtUsername.getText().trim().equals(file.next())) &&
-                    txtPassword.getText().trim().equals(file.next())) {
+            String user = file.next();
+            String pass = file.next();
+            if((txtUsername.getText().trim().equals(user)) &&
+                    txtPassword.getText().trim().equals(pass)) {
                 return true;
             }
         }

@@ -3,10 +3,7 @@ package group.project;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.scene.*;
@@ -14,12 +11,14 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.beans.value.ChangeListener;
 
-import java.awt.*;
-
 public class frmPost {
 
-    private static Stage window;
+    public static Stage window;
     private static TextArea txtPost;
+    public static boolean editMode = false;
+    public static boolean deleted;
+    public static Post editPost;
+    public static String form;
 
     /**
      * Display the New Post window
@@ -29,6 +28,8 @@ public class frmPost {
         window = new Stage();
         window.setTitle("New Post");
         window.setResizable(false);
+
+        deleted = false;
 
         // Set character limit for post
         final int MAX_SIZE = 140;
@@ -94,16 +95,25 @@ public class frmPost {
             else {
                 // Remove any new line instances from the post
                 txtPost.setText(txtPost.getText().replaceAll("\\n", " "));
-                // Create a new post authored by current user
-                Profile.newPost(txtPost.getText().trim(), rbPublic.isSelected());
-                PostRepository.saveAllPosts();
 
-                if (rbPublic.isSelected())
-                    frmHomePage.getAllPublicPosts();
-                else
-                    frmHomePage.getAllPrivatePosts();
+                // Update message content if in edit mode
+                if (editMode){
+                    editPost.setMessage(txtPost.getText().trim());
+                    PostRepository.saveAllPosts();
+                }
+                // Else create new post
+                else {
+                    // Create a new post authored by current user
+                    Profile.newPost(txtPost.getText().trim(), rbPublic.isSelected());
+                    PostRepository.saveAllPosts();
 
-                window.close();
+                    if (rbPublic.isSelected())
+                        frmHomePage.getAllPublicPosts();
+                    else
+                        frmHomePage.getAllPrivatePosts();
+                }
+
+                    window.close();
             }
         });
         btnPost.defaultButtonProperty().bind(btnPost.focusedProperty());
@@ -116,13 +126,39 @@ public class frmPost {
         btnCancel.setFont(Font.font("Helvetica", 15));
         btnCancel.defaultButtonProperty().bind(btnCancel.focusedProperty());
         GridPane.setConstraints(btnCancel, 3, 7);
-        btnCancel.setTranslateX(57);
+
+        // Modify window if in post edit mode
+        if (editMode){
+            window.setTitle("Edit Post");
+            btnPost.setText("Save");
+            Button btnDelete = new Button("Delete Post");
+            btnDelete.setOnAction(event -> {
+                ConfirmBox.display("Delete Post", "Are you sure you want to delete this post?", 300, 110);
+                if (ConfirmBox.result) {
+                    deleted = true;
+                    PostRepository.deletePost(editPost);
+                    FileUpdater.removePostID(editPost.getMsg_ID());
+                    window.close();
+                }
+            });
+            btnDelete.setFont(Font.font("Helvetica", 15));
+            btnDelete.defaultButtonProperty().bind(btnDelete.focusedProperty());
+            GridPane.setConstraints(btnDelete, 3, 7);
+            btnDelete.setTranslateX(135);
+            btnDelete.setTranslateY(-5);
+            grid.getChildren().add(btnDelete);
+
+            txtPost.setText(editPost.getMessage().trim());
+            if (!editPost.isPublic()){
+                rbPrivate.setSelected(true);
+            }
+        }
 
         // Translate X and Y properties for cleaner GUI
         txtPost.setTranslateY(10);
         txtPost.setTranslateX(-10);
         btnPost.setTranslateX(-10);
-        btnCancel.setTranslateX(57);
+        btnCancel.setTranslateX(52);
         btnPost.setTranslateY(-5);
         btnCancel.setTranslateY(-5);
         rbPublic.setTranslateX(-10);
@@ -143,12 +179,17 @@ public class frmPost {
      * Handle the close event for the New Post window
      */
     private static void closeWindow(){
-        if (!txtPost.getText().trim().isEmpty()) {
-            ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",
-                    300, 110);
-            if (ConfirmBox.result)
-                window.close();
-        } else
+        if (editMode) {
             window.close();
+        }
+        else {
+            if (!txtPost.getText().trim().isEmpty()) {
+                ConfirmBox.display("Cancel Post", "Post content will be lost, are you sure you want to close?",
+                        300, 110);
+                if (ConfirmBox.result)
+                    window.close();
+            } else
+                window.close();
+        }
     }
 }

@@ -6,7 +6,6 @@ import javafx.scene.text.*;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
-import javafx.scene.control.*;
 import javafx.geometry.*;
 
 public class frmUserProfile {
@@ -30,7 +29,7 @@ public class frmUserProfile {
         topPane.setStyle("-fx-background-color: #BF9393");
         topPane.setPadding(new Insets(3, 3, 15, 0));
         // Create bottom pane layout
-        HBox bottomPane = new HBox(10);
+        HBox bottomPane = new HBox(15);
         bottomPane.setAlignment(Pos.CENTER_RIGHT);
         bottomPane.setStyle("-fx-background-color: #A0D2F7");
         bottomPane.setPadding(new Insets(10, 3, 3, 0));
@@ -47,9 +46,33 @@ public class frmUserProfile {
         btnClose.setTranslateX(-5);
         btnClose.setTranslateY(-5);
         btnClose.setFont(Font.font("Helvetica", 15));
+        btnClose.defaultButtonProperty().bind(btnClose.focusedProperty());
+
+        Button btnFollowUnfollow = new Button();
+        if (Profile.isFollowing(user.getUsername()))
+            btnFollowUnfollow.setText("Unfollow");
+        else {
+            btnFollowUnfollow.setText("Follow");
+            btnFollowUnfollow.setTranslateX(-5);
+        }
+
+        // Execute appropriate action depending on state of follow button
+        btnFollowUnfollow.setOnAction(event -> {
+            if (btnFollowUnfollow.getText().equals("Follow")) {
+                Profile.addFollowing(user);
+                btnFollowUnfollow.setText("Unfollow");
+            } else {
+                Profile.removeFollowing(user);
+                btnFollowUnfollow.setText("Follow");
+            }
+        });
+        btnFollowUnfollow.defaultButtonProperty().bind(btnFollowUnfollow.focusedProperty());
+        btnFollowUnfollow.setFont(Font.font("Helvetica", 15));
+        btnFollowUnfollow.setTranslateY(-5);
+        if (frmLogin.exploreMode) {btnFollowUnfollow.setDisable(true);}
 
         topPane.getChildren().add(txtTitle);
-        bottomPane.getChildren().add(btnClose);
+        bottomPane.getChildren().addAll(btnFollowUnfollow, btnClose);
 
         // Create center pane to display user profile info
         VBox centerPane = new VBox(15);

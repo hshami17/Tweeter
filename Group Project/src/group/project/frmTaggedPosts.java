@@ -11,8 +11,6 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
-import java.io.IOException;
-
 
 public class frmTaggedPosts {
 
@@ -98,7 +96,7 @@ public class frmTaggedPosts {
                 txtPost.setWrappingWidth(400);
 
                 centerPane.getChildren().addAll(txtAuthor, txtPost);
-                taggedPost.addPostComponents(centerPane, scrollPane, borderPane, "Tagged Posts");
+                taggedPost.addPostComponents(centerPane, scrollPane, borderPane, txtPost, "Tagged Posts");
             }
         }
     }

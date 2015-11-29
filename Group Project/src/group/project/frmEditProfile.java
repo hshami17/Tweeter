@@ -10,10 +10,11 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 import javafx.beans.value.ChangeListener;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class frmEditProfile {
      private static Stage window;
@@ -185,6 +186,8 @@ public class frmEditProfile {
          Button btnSave = new Button("Save");
          btnSave.setOnAction(event -> {
              try {
+                 Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+                 Matcher m = p.matcher(txtUsername.getText().trim());
                  boolean invalidUsername = false;
                  if (!txtUsername.getText().trim().equals(Profile.username)) {
                      // Make sure username does not exist
@@ -199,7 +202,11 @@ public class frmEditProfile {
                  }
                  if (invalidUsername) {
                      AlertBox.display("Invalid", "This username is already taken!", 220, 100);
-                 } else {
+                 }
+                 else if (m.find()){
+                     AlertBox.display("Invalid", "Please make sure the username contains no special characters.", 320, 100);
+                 }
+                 else {
                      // Check for correct password if password entered
                      if (!txtOldPassword.getText().trim().equals(Profile.password) &&
                              !txtOldPassword.getText().trim().isEmpty())
@@ -236,13 +243,13 @@ public class frmEditProfile {
                          // Set the new age
                          editedUser.setAge(txtAge.getText().trim());
                          // Set the new user bio
+                         txtBio.setText(txtBio.getText().replaceAll("\\n", " "));
                          editedUser.setUserBio(txtBio.getText().trim());
 
                          // Save all users to reflect any changes
                          UserRepository.saveAllUsers();
                          // Update user name if it was changed
                          FileUpdater.updateUsername(oldUsername, Profile.username);
-
                          window.close();
                      }
                  }
@@ -269,9 +276,10 @@ public class frmEditProfile {
              ConfirmBox.display("Delete Account", "This cannot be undone, Are you sure you want to delete your account",
                      300, 110);
              if (ConfirmBox.result) {
+                 FileUpdater.deleteUserFromFiles(Profile.username,
+                         UserRepository.getUser(Profile.username).getUserID());
                  UserRepository.removeUser(Profile.username);
                  UserRepository.saveAllUsers();
-                 FileUpdater.deleteUserFromFiles(Profile.username);
 
                  AlertBox.display("Delete Complete", "You will now be returned to the login screen", 250, 100);
                  window.close();
@@ -285,7 +293,6 @@ public class frmEditProfile {
          btnDeleteAccount.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
          GridPane.setConstraints(btnDeleteAccount, 2, 7);
          GridPane.setColumnSpan(btnDeleteAccount, 2);
-
 
 
          // Add controls to layout and setup the window scene
